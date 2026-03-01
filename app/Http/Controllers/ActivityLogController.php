@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
-use Illuminate\Http\Request;
 use App\Models\Company;
+use Illuminate\Http\Request;
 
 class ActivityLogController extends Controller
 {
@@ -17,12 +17,12 @@ class ActivityLogController extends Controller
     {
         //    dd("test");
         $logs = ActivityLog::with(['user', 'trainee'])
+            ->whereNotNull('user_id')
             ->latest()
             ->get();
         //    dd($logs);
         return view('user_role.notification_page', compact('logs'));
         // return view('user_role.notification_page', compact('logs'));
-
     }
 
     public function markAsRead(ActivityLog $log)
@@ -69,16 +69,16 @@ class ActivityLogController extends Controller
     public function store(Request $request)
     {
         //        $company = Company::create($request->all());
-//
-//        ActivityLog::create([
-//            'user_id'  => Auth::id(),
-//            'action'   => 'created',
-//            'model'    => 'Company',
-//            'model_id' => $company->id,
-//            'changes'  => json_encode($company->toArray()),
-//        ]);
-//
-//        return redirect()->back();
+        //
+        //        ActivityLog::create([
+        //            'user_id'  => Auth::id(),
+        //            'action'   => 'created',
+        //            'model'    => 'Company',
+        //            'model_id' => $company->id,
+        //            'changes'  => json_encode($company->toArray()),
+        //        ]);
+        //
+        //        return redirect()->back();
     }
 
     /**

@@ -442,7 +442,7 @@ class TraineeController extends Controller
     {
         $trainees = Trainee::with(['academy', 'cohort'])
             ->get();
-//        dd($trainees->get(1));
+    //    dd($trainees);
         return view('trainees.showAll', compact('trainees'));
     }
 
