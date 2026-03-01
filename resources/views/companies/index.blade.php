@@ -88,7 +88,7 @@
         <div class="page-header">
             <div>
                 <h1 class="fw-bold mb-0">Companies</h1>
-                <p class="text-muted mb-0">Manage organization list and deal statuses</p>
+                <p class="text-muted mb-0">Manage organization list and deal status</p>
             </div>
             <div class="d-flex gap-2">
                 <a href="{{ route('companies.showAll') }}" class="btn btn-outline-primary px-4 py-2 fw-bold shadow-sm">
@@ -113,7 +113,7 @@
                 <div class="col-md-6">
                     <span class="bar-label">Status Filter</span>
                     <select id="status-filter" class="form-select border-primary shadow-sm">
-                        <option value="">Show All Statuses</option>
+                        <option value="">Show All Status</option>
                         <option value="Active">Active Only</option>
                         <option value="Inactive">Inactive Only</option>
                     </select>

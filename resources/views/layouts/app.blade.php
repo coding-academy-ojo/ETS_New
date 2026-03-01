@@ -9,12 +9,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ETS</title>
 
-    <!-- Fonts & Styles -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link rel="stylesheet" href="resources\css\app.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
-    <link rel="stylesheet" href="./style.css">
     <link href="https://cdn.jsdelivr.net/npm/boosted@5.3.3/dist/css/boosted.min.css" rel="stylesheet"
           integrity="sha384-laZ3JUZ5Ln2YqhfBvadDpNyBo7w5qmWaRnnXuRwNhJeTEFuSdGbzl4ZGHAEnTozR" crossorigin="anonymous">
     <link href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.css" rel="stylesheet">
@@ -26,6 +23,8 @@
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/svg+xml" href="https://boosted.orange.com/docs/5.3/assets/brand/orange-logo.svg">
 
+
+    <!-- Orange Boosted is already included above (Line 18 & 157), no need for standard bootstrap -->
     <style>
         .map-orange { margin: 50px auto; position: relative; width: 200px; }
     </style>
@@ -118,8 +117,7 @@
                                     <i class="bi bi-bell-fill fs-5 text-warning"></i>
                                     <span id="navbarUnreadBadge"
                                           class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                          style="{{ $unreadActivityCount == 0 ? 'display:none' : '' }}"> 
-                                          
+                                          style="{{ $unreadActivityCount == 0 ? 'display:none' : '' }}">
                       {{ $unreadActivityCount }}
                 </span>
                                 </a>
@@ -150,12 +148,11 @@
 </footer>
 
 <!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/boosted@5.3.3/dist/js/boosted.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/boosted@5.3.3/dist/js/boosted.bundle.min.js" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js'></script>
-<script src="./script.js"></script>
+<script src="{{ asset('script.js') }}"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 @yield('scripts')

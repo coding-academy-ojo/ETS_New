@@ -9,8 +9,6 @@
             --bg-body: #F9FAFB;
             --border-soft: #E5E7EB;
             --orange-subtle: #FFF5ED;
-
-            /* Status Colors */
             --success-bg: #ECFDF5;
             --success-text: #059669;
             --danger-bg: #FEF2F2;
@@ -45,21 +43,6 @@
             border: 1px solid var(--border-soft);
             padding: 0 0.75rem;
             font-size: 0.85rem;
-            background-color: #fff;
-        }
-
-        .search-input:focus {
-            border-color: var(--orange-brand);
-            box-shadow: 0 0 0 4px rgba(255, 121, 0, 0.1);
-            outline: none;
-        }
-
-        select.search-input {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234B5563'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1.1em;
         }
 
         .table-container {
@@ -67,6 +50,7 @@
             border-radius: 12px;
             border: 1px solid var(--border-soft);
             overflow: hidden;
+            min-height: 400px;
         }
 
         .table-custom thead th {
@@ -81,18 +65,13 @@
             font-size: .9rem;
         }
 
-        /* Hover effect for name links */
         .trainee-link {
             color: var(--charcoal);
             text-decoration: none;
-            transition: all 0.2s ease;
-            border-bottom: 1px solid transparent;
+            font-weight: 600;
         }
 
-        .trainee-link:hover {
-            color: var(--orange-brand);
-            border-bottom: 1px solid var(--orange-brand);
-        }
+        .trainee-link:hover { color: var(--orange-brand); }
 
         .academy-badge {
             background: var(--charcoal);
@@ -113,6 +92,7 @@
         .status-unemployed { background: var(--danger-bg); color: var(--danger-text); }
         .status-default { background: var(--orange-subtle); color: var(--orange-brand); }
 
+        /* Pagination Styles */
         .page-btn {
             height: 40px;
             min-width: 40px;
@@ -123,25 +103,48 @@
             border: 1px solid var(--border-soft);
             cursor: pointer;
             background: #fff;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
         .page-btn.active { background: var(--orange-brand); color: #fff; border-color: var(--orange-brand); }
+        .page-btn:hover:not(.active) { background: #f3f4f6; }
+
+        /* Lazy Load Loading Area */
+        #lazy-load-sentinel {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid #f9f9f9;
+        }
+
+        .dots:after {
+            content: ' .';
+            animation: dots 1s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            40% { color: var(--orange-brand); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            60% { text-shadow: .25em 0 0 var(--orange-brand), .5em 0 0 rgba(0,0,0,0); }
+            80%, 100% { text-shadow: .25em 0 0 var(--orange-brand), .5em 0 0 var(--orange-brand); }
+        }
     </style>
 
     <div class="container-fluid container-fluid-custom">
         <header class="page-header">
             <h2 class="fw-bold m-0">Trainee Records</h2>
-            <p class="text-muted small">Orange Digital Center • Employee Dashboard</p>
+            <p class="text-muted small">Hybrid Pagination & Lazy Loading</p>
         </header>
 
         {{-- SEARCH + FILTERS --}}
         <div class="search-card">
             <div class="row g-2">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="small fw-bold text-muted mb-1 d-block">Keyword</label>
                     <input type="text" id="search_input" class="form-control search-input" placeholder="Search name...">
                 </div>
-
                 <div class="col-md-2">
                     <label class="small fw-bold text-muted mb-1 d-block">Status</label>
                     <select id="status_filter" class="form-control search-input">
@@ -150,8 +153,7 @@
                         <option value="unemployed">Unemployed</option>
                     </select>
                 </div>
-
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="small fw-bold text-muted mb-1 d-block">Academy</label>
                     <select id="academy_filter" class="form-control search-input">
                         <option value="">All Academies</option>
@@ -160,9 +162,17 @@
                         @endforeach
                     </select>
                 </div>
-
-                <div class="col-md-3 text-md-end align-self-end">
-                    <span class="text-muted small fw-medium d-block mb-2" id="page_info"></span>
+                <div class="col-md-3">
+                    <label class="small fw-bold text-muted mb-1 d-block">Background</label>
+                    <select id="edu_back_filter" class="form-control search-input">
+                        <option value="">All Backgrounds</option>
+                        @foreach($trainees->pluck('educational_background')->unique()->filter() as $edu_background)
+                            <option value="{{ $edu_background }}">{{ $edu_background }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2 text-md-end align-self-end">
+                    <div id="page_info" class="small fw-bold text-muted">Showing 0 of 0</div>
                 </div>
             </div>
         </div>
@@ -170,24 +180,29 @@
         {{-- TABLE --}}
         <div class="table-container">
             <div class="table-responsive">
-                <table class="table table-custom">
+                <table class="table table-custom mb-0">
                     <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Academy</th>
-                        <th>Background</th>
-                        <th>Cohort</th>
-                        <th>Status</th>
-                    </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Academy</th>
+                            <th>Background</th>
+                            <th>Cohort</th>
+                            <th>Status</th>
+                        </tr>
                     </thead>
                     <tbody id="table_body"></tbody>
                 </table>
             </div>
+
+            {{-- Lazy Loading Trigger --}}
+            <div id="lazy-load-sentinel">
+                <span class="text-muted small dots">Scrolling reveals more</span>
+            </div>
         </div>
 
-        {{-- PAGINATION --}}
+        {{-- PAGINATION BUTTONS --}}
         <div class="d-flex justify-content-center mt-4">
-            <div class="d-flex gap-2" id="pagination"></div>
+            <div class="d-flex gap-2" id="pagination_container"></div>
         </div>
     </div>
 @endsection
@@ -195,97 +210,139 @@
 @section('scripts')
     <script>
         const allData = @json($trainees);
-        const rowsPerPage = 10;
-        let currentPage = 1;
         let filteredData = [...allData];
+
+        // CONFIGURATION
+        const ROWS_PER_PAGE = 20;   // Total rows per pagination click
+        const LAZY_CHUNK = 5;       // Rows to show per scroll
+
+        let currentPage = 1;        // Current active page
+        let currentVisibleInPage = LAZY_CHUNK; // How many rows are currently unhidden via scroll
+
+        // --- CORE FUNCTIONS ---
 
         function applyFilters() {
             const q = document.getElementById('search_input').value.toLowerCase();
             const status = document.getElementById('status_filter').value.toLowerCase();
             const academy = document.getElementById('academy_filter').value;
+            const edu = document.getElementById('edu_back_filter').value;
 
             filteredData = allData.filter(t => {
                 const fullName = `${t.first_name} ${t.last_name}`.toLowerCase();
-                const matchesSearch = fullName.includes(q);
-                const matchesStatus = !status || (t.employment_status ?? '').toLowerCase() === status;
-                const matchesAcademy = !academy || (t.academy?.name ?? '') === academy;
-
-                return matchesSearch && matchesStatus && matchesAcademy;
+                return fullName.includes(q) &&
+                       (!status || (t.employment_status ?? '').toLowerCase() === status) &&
+                       (!academy || (t.academy?.name ?? '') === academy) &&
+                       (!edu || (t.educational_background ?? '') === edu);
             });
 
             currentPage = 1;
-            renderTable();
+            resetLazyLoad();
             renderPagination();
+            renderTable();
+        }
+
+        function resetLazyLoad() {
+            currentVisibleInPage = LAZY_CHUNK;
         }
 
         function renderTable() {
-            const start = (currentPage - 1) * rowsPerPage;
-            const pageData = filteredData.slice(start, start + rowsPerPage);
             const tbody = document.getElementById('table_body');
-            tbody.innerHTML = '';
+            const sentinel = document.getElementById('lazy-load-sentinel');
+            
+            // Calculate slice for current page
+            const pageStart = (currentPage - 1) * ROWS_PER_PAGE;
+            const pageEnd = pageStart + ROWS_PER_PAGE;
+            const fullPageData = filteredData.slice(pageStart, pageEnd);
 
-            if (!pageData.length) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5">No records found</td></tr>`;
-                document.getElementById('page_info').innerText = "Showing 0 records";
+            // Calculate subset for Lazy Loading
+            const visibleData = fullPageData.slice(0, currentVisibleInPage);
+
+            tbody.innerHTML = '';
+            
+            if (visibleData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5">No records found.</td></tr>`;
+                sentinel.style.display = 'none';
                 return;
             }
 
-            pageData.forEach(t => {
+            visibleData.forEach(t => {
                 const status = t.employment_status ?? 'Active';
                 const statusClass = status.toLowerCase() === 'employed' ? 'status-employed' : (status.toLowerCase() === 'unemployed' ? 'status-unemployed' : 'status-default');
-                const bgText = (t.educational_background ?? 'N/A').replace(/_/g, ' ').toUpperCase();
-
-                const profileUrl = `/trainees/${t.id}/profile`;u
+                
                 tbody.innerHTML += `
                 <tr>
-                    <td class="fw-semibold">
-                        <a href="/ets/trainees/${t.id}/profile" target="_blank" class="trainee-link">
-                            ${t.first_name} ${t.last_name}
-                        </a>
-                    </td>
+                    <td><a href="/ets/trainees/${t.id}/profile" target="_blank" class="trainee-link">${t.first_name} ${t.last_name}</a></td>
                     <td><span class="academy-badge">${t.academy?.name ?? 'ODC'}</span></td>
-                    <td class="text-muted small">${bgText}</td>
+                    <td class="text-muted small">${(t.educational_background ?? 'N/A').toUpperCase()}</td>
                     <td class="text-muted">${t.cohort?.name ?? '-'}</td>
                     <td><span class="status-badge ${statusClass}">${status}</span></td>
                 </tr>`;
             });
 
-            document.getElementById('page_info').innerText = `Showing ${start + 1} – ${Math.min(start + rowsPerPage, filteredData.length)} of ${filteredData.length}`;
+            // Update Counter
+            document.getElementById('page_info').innerText = `Page ${currentPage}: Showing ${visibleData.length} of ${fullPageData.length} (Total: ${filteredData.length})`;
+
+            // Hide/Show lazy sentinel
+            if (currentVisibleInPage >= fullPageData.length) {
+                sentinel.style.display = 'none';
+            } else {
+                sentinel.style.display = 'flex';
+            }
         }
 
         function renderPagination() {
-            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-            const container = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredData.length / ROWS_PER_PAGE);
+            const container = document.getElementById('pagination_container');
             container.innerHTML = '';
+
             if (totalPages <= 1) return;
 
-            container.innerHTML += `<div class="page-btn" onclick="goToPage(${currentPage - 1})">❮</div>`;
+            // Simple Pagination Buttons
             for (let i = 1; i <= totalPages; i++) {
                 if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
-                    container.innerHTML += `<div class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</div>`;
-                } else if (Math.abs(i - currentPage) === 2) {
-                    container.innerHTML += `<div class="px-1 text-muted">...</div>`;
+                    const btn = document.createElement('div');
+                    btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                    btn.innerText = i;
+                    btn.onclick = () => {
+                        currentPage = i;
+                        resetLazyLoad();
+                        renderTable();
+                        renderPagination();
+                        window.scrollTo({top: 0, behavior: 'smooth'});
+                    };
+                    container.appendChild(btn);
                 }
             }
-            container.innerHTML += `<div class="page-btn" onclick="goToPage(${currentPage + 1})">❯</div>`;
         }
 
-        function goToPage(page) {
-            const total = Math.ceil(filteredData.length / rowsPerPage);
-            if (page < 1 || page > total) return;
-            currentPage = page;
-            renderTable();
+        // --- INTERSECTION OBSERVER (THE LAZY PART) ---
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                const pageStart = (currentPage - 1) * ROWS_PER_PAGE;
+                const pageEnd = pageStart + ROWS_PER_PAGE;
+                const fullPageData = filteredData.slice(pageStart, pageEnd);
+
+                if (currentVisibleInPage < fullPageData.length) {
+                    // Load next chunk
+                    setTimeout(() => {
+                        currentVisibleInPage += LAZY_CHUNK;
+                        renderTable();
+                    }, 200);
+                }
+            }
+        }, { threshold: 0.1 });
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            observer.observe(document.getElementById('lazy-load-sentinel'));
+            
+            ['search_input', 'status_filter', 'academy_filter', 'edu_back_filter'].forEach(id => {
+                document.getElementById(id).addEventListener('change', applyFilters);
+                if(id === 'search_input') document.getElementById(id).addEventListener('input', applyFilters);
+            });
+
             renderPagination();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Event Listeners
-        document.getElementById('search_input').addEventListener('input', applyFilters);
-        document.getElementById('status_filter').addEventListener('change', applyFilters);
-        document.getElementById('academy_filter').addEventListener('change', applyFilters);
-
-        // Initial Render
-        renderTable();
-        renderPagination();
+            renderTable();
+        });
     </script>
 @endsection
