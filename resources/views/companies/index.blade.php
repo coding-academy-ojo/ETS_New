@@ -88,7 +88,7 @@
         <div class="page-header">
             <div>
                 <h1 class="fw-bold mb-0">Companies</h1>
-                <p class="text-muted mb-0">Manage organization list and deal status</p>
+                <p class="text-muted mb-0">Manage organization list and deal statuses</p>
             </div>
             <div class="d-flex gap-2">
                 <a href="{{ route('companies.showAll') }}" class="btn btn-outline-primary px-4 py-2 fw-bold shadow-sm">
@@ -113,7 +113,7 @@
                 <div class="col-md-6">
                     <span class="bar-label">Status Filter</span>
                     <select id="status-filter" class="form-select border-primary shadow-sm">
-                        <option value="">Show All Status</option>
+                        <option value="">Show All Statuses</option>
                         <option value="Active">Active Only</option>
                         <option value="Inactive">Inactive Only</option>
                     </select>
@@ -167,14 +167,12 @@
                                 <img src="{{ $imageUrl }}" alt="Logo" class="co-logo shadow-sm">
                             </td>
                             <td data-filter="{{ $company->type_of_deal == 1 ? 'Active' : 'Inactive' }}">
-                                <form action="{{ route('companies.updateTypeOfDeal', $company->id) }}" method="POST" id="typeOfDealForm-{{ $company->id }}">
-                                    @csrf
-                                    @method('PATCH')
+                                <div id="typeOfDealForm-{{ $company->id }}">
                                     <select name="type_of_deal" class="form-select fw-bold" style="color: {{ $company->type_of_deal == 1 ? 'green' : 'red' }};" onchange="submitFormAndChangeColor({{ $company->id }})">
                                         <option value="1" {{ $company->type_of_deal == 1 ? 'selected' : '' }}>Active</option>
                                         <option value="0" {{ $company->type_of_deal == 0 ? 'selected' : '' }}>Inactive</option>
                                     </select>
-                                </form>
+                                </div>
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
@@ -230,10 +228,58 @@
         });
 
         function submitFormAndChangeColor(companyId) {
-            const form = document.getElementById('typeOfDealForm-' + companyId);
-            if (form) {
-                form.submit();
-            }
+            const select = document.querySelector(`#typeOfDealForm-${companyId} select`);
+            const newValue = select.value;
+            const row = select.closest('tr');
+            const cell = select.closest('td');
+
+            // Show loading state
+            select.disabled = true;
+            select.style.opacity = '0.5';
+
+            fetch(`{{ route('companies.updateTypeOfDeal', ':id') }}`.replace(':id', companyId), {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    type_of_deal: newValue
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update Row styling
+                    if (newValue == "0") {
+                        row.classList.add('deactive-row');
+                        select.style.color = 'red';
+                    } else {
+                        row.classList.remove('deactive-row');
+                        select.style.color = 'green';
+                    }
+
+                    // Update DataTables metadata for filtering
+                    const api = $('#company-table').DataTable();
+                    const dtRow = api.row(row);
+                    cell.setAttribute('data-filter', newValue == "1" ? 'Active' : 'Inactive');
+                    api.cell(cell).invalidate().draw(false);
+
+                    // Optional: Show a subtle toast or message
+                    console.log('Status updated successfully');
+                } else {
+                    alert('Error updating status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            })
+            .finally(() => {
+                select.disabled = false;
+                select.style.opacity = '1';
+            });
         }
     </script>
 @endsection

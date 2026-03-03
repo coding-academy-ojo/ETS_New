@@ -133,7 +133,7 @@
                 🔔 Activity Log 
                 <span id="totalRecordsBadge" class="badge rounded-pill ms-2">0 records</span>
             </h4>
-            <button id="markAllBtn" class="btn btn-sm btn-outline-success px-3">✔ Mark all as seen</button>
+            <button id="markAllBtn" class="btn btn-sm btn-outline-success px-3" data-bs-toggle="modal" data-bs-target="#confirmModal">✔ Mark all as seen</button>
         </div>
 
         @if($logs->count())
@@ -471,16 +471,12 @@
             console.log('🔘 Mark All Button:', markAllBtn ? 'Found' : 'NOT FOUND');
 
             if (markAllBtn) {
-                const markAllConfirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
                 const confirmBtn = document.getElementById('confirmMarkAllBtn');
-
-                markAllBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    markAllConfirmModal.show();
-                });
+                const confirmModalEl = document.getElementById('confirmModal');
 
                 confirmBtn.addEventListener('click', function () {
-                    markAllConfirmModal.hide();
+                    const confirmModal = boosted.Modal.getInstance(confirmModalEl) || new boosted.Modal(confirmModalEl);
+                    confirmModal.hide();
                     console.log('🔄 Marking all as read...');
 
                     fetch(`/ets/activity-log/mark-all-read`, {
@@ -520,7 +516,8 @@
                                 // Show Success Modal instead of Alert
                                 const successMsg = `All logs marked as seen! (${data.updated_count || 'All'} updated)`;
                                 document.getElementById('successModalMessage').textContent = successMsg;
-                                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                                const successModalEl = document.getElementById('successModal');
+                                const successModal = boosted.Modal.getInstance(successModalEl) || new boosted.Modal(successModalEl);
                                 successModal.show();
                             }
                         })
