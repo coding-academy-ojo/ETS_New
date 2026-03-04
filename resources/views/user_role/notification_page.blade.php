@@ -125,6 +125,44 @@
             font-weight: 700;
             padding: 0.4em 0.8em;
         }
+
+        /* Search Card & Filter Styling */
+        .search-card {
+            background: white;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--ods-gray-300);
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--ods-gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .search-input {
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--ods-gray-300);
+            padding: 0 0.75rem;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            background-color: white;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .search-input:focus {
+            border-color: var(--ods-orange-100);
+            box-shadow: 0 0 0 3px rgba(255, 121, 0, 0.1);
+            outline: none;
+        }
     </style>
 
     <div class="container py-4">
@@ -137,31 +175,33 @@
         </div>
 
         @if($logs->count())
-            <div class="card border-0 shadow-sm mb-3">
-                <div class="card-body p-3">
-                    <div class="row g-3 align-items-center">
-                        <div class="col-md-auto d-flex align-items-center">
-                            <i class="fa fa-filter text-muted me-2"></i>
-                            <label class="me-2 fw-semibold small text-muted text-uppercase">Filters:</label>
+            <div class="search-card">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-auto d-flex align-items-center mb-3 mb-md-0">
+                        <div class="bg-light p-2 rounded-3 me-2">
+                            <i class="fa fa-filter text-primary"></i>
                         </div>
-                        <div class="col-md-auto">
-                            <select id="actionFilter" class="form-select form-select-sm border-0 bg-light fw-bold">
-                                <option value="all">All Actions</option>
-                                <option value="created">Created</option>
-                                <option value="updated">Updated</option>
-                                <option value="deleted">Deleted</option>
-                            </select>
-                        </div>
-                        <div class="col-md-auto">
-                            <select id="userFilter" class="form-select form-select-sm border-0 bg-light fw-bold">
-                                <option value="all">All Users</option>
-                                @foreach($logs->unique('user_id') as $uniqueLog)
-                                    <option value="{{ $uniqueLog->user ? $uniqueLog->user->name : 'System' }}">
-                                        {{ $uniqueLog->user ? $uniqueLog->user->name : 'System' }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <span class="fw-bold text-dark text-uppercase small" style="letter-spacing: 0.05em;">Quick Filters</span>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="filter-label">Action Type</label>
+                        <select id="actionFilter" class="form-select search-input">
+                            <option value="all">All Actions</option>
+                            <option value="created">Created</option>
+                            <option value="updated">Updated</option>
+                            <option value="deleted">Deleted</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="filter-label">Performed By</label>
+                        <select id="userFilter" class="form-select search-input">
+                            <option value="all">All Users</option>
+                            @foreach($logs->unique('user_id') as $uniqueLog)
+                                <option value="{{ $uniqueLog->user ? $uniqueLog->user->name : 'System' }}">
+                                    {{ $uniqueLog->user ? $uniqueLog->user->name : 'System' }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -199,7 +239,8 @@
                                         {{ ucfirst($log->action) }}
                                     </span>
                                 </td>
-                                <td class="text-muted fw-medium">{{ $log->model }}</td>
+                                <td class="text-muted fw-small" style="font-size: 0.85rem;">{{ $log->model }}</td>
+                            
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-light border" data-bs-toggle="modal"
                                         data-bs-target="#logModal{{ $log->id }}">
@@ -244,10 +285,20 @@
                                             <i class="fa fa-user fa-lg" style="color: var(--ods-gray-600);"></i>
                                         </div>
                                         <div>
-                                            <small class="text-uppercase fw-bold opacity-50" style="font-size: 0.85rem; letter-spacing: 0.1em; color: var(--ods-black-900);">Target Identity</small>
+                                            <small class="text-uppercase fw-bold opacity-50" style="font-size: 0.85rem; letter-spacing: 0.1em; color: var(--ods-black-900);">
+                                                @if($log->model === 'Company')
+                                                    Company Name
+                                                @elseif($log->model === 'Trainee' || $log->model === 'EmploymentLog')
+                                                    Trainee Name
+                                                @else
+                                                    {{ $log->model }} 
+                                                @endif
+                                            </small>
                                             <h4 class="mb-0 fw-bold" style="color: var(--ods-black-900);">
                                                 @if($log->model === 'EmploymentLog' || $log->model === 'Trainee')
                                                     {{ $changes['trainee_name'] ?? ($log->trainee ? $log->trainee->first_name . ' ' . $log->trainee->last_name : 'N/A') }}
+                                                @elseif($log->model === 'Company')
+                                                    {{ $changes['company_name'] ?? ($log->company ? $log->company->company_name : 'N/A') }}
                                                 @else
                                                     {{ $log->model }} Reference
                                                 @endif
@@ -338,8 +389,8 @@
                         <p class="text-muted mb-0">This will mark all activity logs as seen across your entire history.</p>
                     </div>
                     <div class="modal-footer border-top-0 justify-content-center pb-5 pt-2 px-4">
-                        <button type="button" class="btn btn-light px-4 py-2 border fw-semibold" style="border-radius: 8px; color: var(--ods-gray-700);" data-bs-dismiss="modal">Dismiss</button>
-                        <button type="button" id="confirmMarkAllBtn" class="btn btn-dark px-4 py-2 fw-bold" style="border-radius: 8px; background: var(--ods-black-900);">Yes, Mark All</button>
+                        <button type="button" class="btn btn-light px-4 py-2 border fw-semibold" style="border-radius: 8px; ;" data-bs-dismiss="modal">Dismiss</button>
+                        <button type="button" id="confirmMarkAllBtn" class="btn btn-dark px-4 py-2 fw-bold" style="border-radius: 8px; ;">Yes, Mark All</button>
                     </div>
                 </div>
             </div>
