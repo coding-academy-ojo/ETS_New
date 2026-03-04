@@ -58,7 +58,7 @@
 
                 <div class="card create-card border-0">
                     <div class="card-header card-header-custom">
-                        <h3 class="mb-0 fw-bold"><i class="fas fa-user-plus me-2 text-primary"></i>Create New Employer</h3>
+                        <h3 class="mb-0 fw-bold text-dark"><i class="fas fa-user-plus me-2 text-primary"></i>Create New Employer</h3>
                     </div>
 
                     <div class="card-body p-4">

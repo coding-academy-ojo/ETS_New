@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Company;
+use App\Models\Trainee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Trainee;
-use App\Models\Company;
 
 class ActivityLog extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'user_id',
         'action',
@@ -29,9 +30,14 @@ class ActivityLog extends Model
     {
         return $this->belongsTo(Trainee::class, 'model_id');
     }
-    public function employmentLog()
-{
-    return $this->belongsTo(EmploymentLog::class, 'model_id');
-}
-}
 
+    public function employmentLog()
+    {
+        return $this->belongsTo(EmploymentLog::class, 'model_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'model_id');
+    }
+}

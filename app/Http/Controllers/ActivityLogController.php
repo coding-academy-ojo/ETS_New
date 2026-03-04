@@ -16,7 +16,7 @@ class ActivityLogController extends Controller
     public function index()
     {
         //    dd("test");
-        $logs = ActivityLog::with(['user', 'trainee'])
+        $logs = ActivityLog::with(['user', 'trainee', 'company'])
             ->whereNotNull('user_id')
             ->latest()
             ->get();
