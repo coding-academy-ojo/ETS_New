@@ -389,8 +389,8 @@
                         <p class="text-muted mb-0">This will mark all activity logs as seen across your entire history.</p>
                     </div>
                     <div class="modal-footer border-top-0 justify-content-center pb-5 pt-2 px-4">
-                        <button type="button" class="btn btn-light px-4 py-2 border fw-semibold" style="border-radius: 8px; ;" data-bs-dismiss="modal">Dismiss</button>
-                        <button type="button" id="confirmMarkAllBtn" class="btn btn-dark px-4 py-2 fw-bold" style="border-radius: 8px; ;">Yes, Mark All</button>
+                        <button type="button" class="btn btn-light px-4 py-2 border fw-semibold" style="border-radius: 8px;" data-bs-dismiss="modal">Dismiss</button>
+                        <button type="button" id="confirmMarkAllBtn" class="btn btn-dark px-4 py-2 fw-bold" style="border-radius: 8px; ">Yes, Mark All</button>
                     </div>
                 </div>
             </div>
