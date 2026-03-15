@@ -8,8 +8,8 @@
         }
 
         .profile-page-wrapper {
-            padding-top: 40px;
-            padding-bottom: 60px;
+            padding-top: 20px;
+            padding-bottom: 40px;
         }
 
         .profile-container {
@@ -19,32 +19,33 @@
             max-width: 900px;
             margin: auto;
             overflow: hidden;
+            border: 1px solid #eee;
         }
 
         .profile-hero {
             background: linear-gradient(to right, #007bff, #0056b3);
-            padding: 80px 20px 40px;
+            padding: 40px 20px 30px; /* Reduced from 80px */
             text-align: center;
             color: white;
             position: relative;
         }
 
         .profile-hero-img {
-            width: 150px;
-            height: 150px;
+            width: 120px; /* Reduced from 150px */
+            height: 120px;
             object-fit: cover;
             border-radius: 50%;
-            border: 6px solid #fff;
+            border: 4px solid #fff;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             background-color: #f0f2f5;
             display: block;
-            margin: 0 auto 15px;
+            margin: 0 auto 10px;
         }
 
         .profile-hero h3 {
-            font-size: 2.5rem;
+            font-size: 1.8rem; /* Reduced from 2.5rem */
             font-weight: 700;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .profile-hero p {
