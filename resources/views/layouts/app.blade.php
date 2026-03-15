@@ -7,7 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>ETS</title>
+    <title>ETS - Dashboard</title>
 
     <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -23,129 +23,91 @@
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/svg+xml" href="https://boosted.orange.com/docs/5.3/assets/brand/orange-logo.svg">
 
-
-    <!-- Orange Boosted is already included above (Line 18 & 157), no need for standard bootstrap -->
     <style>
-        .map-orange { margin: 50px auto; position: relative; width: 200px; }
+        .sidebar { min-height: 100vh; }
+        .sidebar .nav-link.active { background-color: #ff7900 !important; }
+        .top-navbar { height: 70px; border-bottom: 1px solid #dee2e6; }
+        .main-content { padding: 20px; }
+        .sidebar-dropdown .dropdown-menu { position: static !important; transform: none !important; margin-left: 20px !important; background: transparent; border: none; }
+        .sidebar-dropdown .dropdown-item { color: #ccc; }
+        .sidebar-dropdown .dropdown-item:hover { background-color: rgba(255,121,0,0.2); color: #fff; }
     </style>
 </head>
 
 <body>
-<div id="app">
-    <header data-bs-theme="dark">
-        <nav class="navbar navbar-expand-lg bg-dark">
-            <div class="container-xxl">
+<div id="app" class="dashboard-wrapper">
+    {{-- Sidebar --}}
+    @include('inc.admin-sidebar')
 
-                {{-- Brand --}}
-                <div class="navbar-brand me-lg-4">
-                    <a href="#">
-                        <img src="https://boosted.orange.com/docs/5.3/assets/brand/orange-logo.svg" width="50" height="50" alt="ETS">
-                    </a>
-                    <h1 class="title d-inline text-white ms-2">ETS</h1>
-                </div>
-
-                {{-- Toggler --}}
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                    <span class="navbar-toggler-icon"></span>
+    {{-- Content Area --}}
+    <div class="content-area">
+        {{-- Top Navbar --}}
+        <nav class="top-navbar bg-white d-flex align-items-center justify-content-between px-4">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-link link-dark d-lg-none me-2" type="button" onclick="document.getElementById('sidebar').classList.toggle('show')">
+                    <i class="bi bi-list fs-3"></i>
                 </button>
+                <h4 class="mb-0 text-dark fw-bold">@yield('page_title', 'Dashboard')</h4>
+            </div>
 
-                {{-- LEFT SIDE --}}
-                <div class="collapse navbar-collapse d-flex justify-content-between w-100" id="mainNavbar">
+            <div class="d-flex align-items-center">
+                {{-- Notifications --}}
+                @if(auth()->check() && auth()->user()->email === 'salameh.yasin@orange.com')
+                    <div class="me-3 position-relative">
+                        <a href="{{ route('user_notification') }}" class="text-dark">
+                            <i class="bi bi-bell fs-4"></i>
+                            <span id="navbarUnreadBadge"
+                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                  style="{{ $unreadActivityCount == 0 ? 'display:none' : '' }}">
+                                {{ $unreadActivityCount }}
+                            </span>
+                        </a>
+                    </div>
+                @endif
 
-                    {{-- LEFT SIDE --}}
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
-
-                        {{-- Manage --}}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Manage</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('survey1') }}">Survey Manage</a></li>
-                                <li><a class="dropdown-item" href="{{ route('survey.logs') }}">Survey Logs</a></li>
-                                <li><a class="dropdown-item" href="{{ route('trainees.showAll') }}">Trainees</a></li>
-                                <li><a class="dropdown-item" href="{{ route('companies.index') }}">Companies</a></li>
-                                @if(auth()->check() && auth()->user()->email === 'salameh.yasin@orange.com')
-                                    <li><a class="dropdown-item" href="{{ route('fund.manageFund') }}">Manage Funds</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('user_details.manageUser') }}">Manage Users</a></li>
-                                @endif
-                            </ul>
-                        </li>
-
-                        {{-- Academy --}}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Select Academy</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url('/academy/amman') }}">Amman Academy</a></li>
-                                <li><a class="dropdown-item" href="{{ url('/academy/aqaba') }}">Aqaba Academy</a></li>
-                                <li><a class="dropdown-item" href="{{ url('/academy/zarqa') }}">Zarqa Academy</a></li>
-                                <li><a class="dropdown-item" href="{{ url('/academy/balqa') }}">Balqa Academy</a></li>
-                                <li><a class="dropdown-item" href="{{ url('/academy/irbid') }}">Irbid Academy</a></li>
-                                <li><a class="dropdown-item" href="{{ url('/academy/data-science') }}">Data Science</a></li>
-                            </ul>
-                        </li>
-
-                        {{-- Auth --}}
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                            @endif
-                            @if (Route::has('register'))
-                                <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">{{ Auth::user()->name }}</a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endguest
-                    </ul>
-                    {{-- RIGHT SIDE: Notification --}}
-                    @if(auth()->check() && auth()->user()->email === 'salameh.yasin@orange.com')
-                        <ul class="navbar-nav">
-                            <li class="nav-item position-relative">
-                                <a class="nav-link" href="{{ route('user_notification') }}">
-                                    <i class="bi bi-bell-fill fs-5 text-warning"></i>
-                                    <span id="navbarUnreadBadge"
-                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                          style="{{ $unreadActivityCount == 0 ? 'display:none' : '' }}">
-                      {{ $unreadActivityCount }}
-                </span>
+                {{-- User Profile --}}
+                @auth
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle text-dark fw-bold" href="#" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle fs-4 me-1"></i>
+                            {{ Auth::user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
                                 </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+                                    @csrf
+                                </form>
                             </li>
                         </ul>
-                    @endif
-
-
-
-                </div>
-
-
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-dark me-2">Login</a>
+                    <a href="{{ route('register') }}" class="btn btn-dark">Register</a>
+                @endauth
             </div>
         </nav>
-    </header>
 
-    <main class="container py-5 mt-3">
-        @yield('content')
-    </main>
-</div>
+        {{-- Main Content --}}
+        <main class="main-content">
+            @yield('content')
+        </main>
 
-<footer class="o-footer p-5 bg-dark text-light bottom-0 w-100">
-    <div class="o-footer-bottom">
-        <div class="container-fluid">
-            <p class="my-2">© Orange 2024</p>
-        </div>
+        {{-- Footer --}}
+        <footer class="o-footer p-4 border-top">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <p class="mb-0 text-muted">© Orange 2024 - ETS Dashboard</p>
+                <div class="footer-links">
+                    <a href="#" class="text-muted text-decoration-none me-3">Privacy Policy</a>
+                    <a href="#" class="text-muted text-decoration-none">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
     </div>
-</footer>
+</div>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/boosted@5.3.3/dist/js/boosted.bundle.min.js" crossorigin="anonymous"></script>

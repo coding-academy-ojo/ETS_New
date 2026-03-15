@@ -4,34 +4,37 @@
     <style>
         /* --- BRANDED ODS VARIABLES --- */
         :root {
-            --ods-orange: #FF7900;
-            --ods-black: #000000;
-            --ods-white: #FFFFFF;
-            --ods-gray-100: #F6F6F6;
-            --ods-gray-200: #EEEEEE;
-            --ods-gray-300: #DDDDDD;
-            --ods-gray-600: #666666;
-            --ods-gray-900: #141414;
+            /* --- BRANDED ODS VARIABLES (Official Boosted Palette) --- */
+            --ods-orange-100: #FF7900;
+            --ods-orange-200: #F16E00;
+            --ods-white:      #FFFFFF;
+            --ods-black:      #000000;
             
-            --ods-p-bg: #F9FAFB;
-            --ods-border: #E5E7EB;
+            /* Grays */
+            --ods-gray-100:   #FAFAFA;
+            --ods-gray-200:   #F6F6F6;
+            --ods-gray-300:   #EEEEEE;
+            --ods-gray-400:   #DDDDDD;
+            --ods-gray-500:   #CCCCCC;
+            --ods-gray-600:   #999999;
+            --ods-gray-700:   #666666;
+            --ods-gray-800:   #595959;
+            --ods-gray-900:   #333333;
+            --ods-gray-950:   #141414;
             
-            --ods-success: #228722;
-            --ods-success-bg: rgba(34, 135, 34, 0.1);
-            --ods-danger: #CD3C14;
-            --ods-danger-bg: rgba(205, 60, 20, 0.1);
+            /* Backgrounds & Borders */
+            --ods-p-bg:       #F9FAFB;
+            --ods-border:     var(--ods-gray-400); /* $ods-gray-300 mapped to #ddd */
+            
+            /* Functional */
+            --ods-success:    #228722; /* $ods-forest-200 */
+            --ods-danger:     #CD3C14; /* $ods-fire-200 */
         }
 
-        .container-fluid-custom {
-            padding: 2.5rem;
-            background-color: var(--ods-p-bg);
-            min-height: 100vh;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
 
         .page-header {
             margin-bottom: 2.5rem;
-            border-left: 5px solid var(--ods-orange);
+            border-left: 5px solid var(--ods-orange-100);
             padding-left: 1.5rem;
         }
 
@@ -57,15 +60,15 @@
         
         .search-input:focus {
             outline: none;
-            border-color: var(--ods-orange);
+            border-color: var(--ods-orange-100);
             box-shadow: 0 0 0 3px rgba(255, 121, 0, 0.1);
         }
 
         .filter-label {
-            font-size: 0.75rem; /* Slightly bigger */
+            font-size: 0.75rem; 
             font-weight: 800;
             text-transform: uppercase;
-            color: var(--ods-gray-600);
+            color: var(--ods-gray-700);
             margin-bottom: 2px;
             display: block;
             letter-spacing: 0.02em;
@@ -98,7 +101,7 @@
         .table-custom tbody td {
             padding: 1.1rem 1.5rem;
             font-size: .95rem;
-            border-bottom: 1px solid var(--ods-gray-200);
+            border-bottom: 1px solid var(--ods-gray-300);
             vertical-align: middle;
         }
 
@@ -107,7 +110,7 @@
         }
 
         .table-custom tbody tr:hover {
-            background-color: #FAFAFA;
+            background-color: var(--ods-gray-100);
         }
 
         .trainee-link {
@@ -117,7 +120,7 @@
             transition: color 0.2s;
         }
 
-        .trainee-link:hover { color: var(--ods-orange); }
+        .trainee-link:hover { color: var(--ods-orange-100); }
 
         .academy-badge {
             background: var(--ods-black);
@@ -137,9 +140,9 @@
             display: inline-block;
         }
 
-        .status-employed { background: var(--ods-success-bg); color: var(--ods-success); border: 1px solid rgba(34, 135, 34, 0.2); }
-        .status-unemployed { background: var(--ods-danger-bg); color: var(--ods-danger); border: 1px solid rgba(205, 60, 20, 0.2); }
-        .status-default { background: #FFF5ED; color: var(--ods-orange); border: 1px solid rgba(255, 121, 0, 0.2); }
+        .status-employed { background: rgba(34, 135, 34, 0.1); color: var(--ods-success); border: 1px solid rgba(34, 135, 34, 0.2); }
+        .status-unemployed { background: rgba(205, 60, 20, 0.1); color: var(--ods-danger); border: 1px solid rgba(205, 60, 20, 0.2); }
+        .status-default { background: #FFF5ED; color: var(--ods-orange-200); border: 1px solid rgba(241, 110, 0, 0.2); }
 
         /* Pagination Styles */
         .pagination-container {
@@ -158,7 +161,7 @@
             cursor: pointer;
             background: var(--ods-white);
             font-weight: 600;
-            color: var(--ods-gray-600);
+            color: var(--ods-gray-700);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
         }
@@ -171,8 +174,8 @@
         }
         
         .page-btn:hover:not(.active) { 
-            background: var(--ods-gray-100); 
-            border-color: var(--ods-gray-300);
+            background: var(--ods-gray-200); 
+            border-color: var(--ods-gray-400);
             color: var(--ods-black);
         }
 
@@ -183,7 +186,7 @@
             align-items: center;
             justify-content: center;
             background: #fdfdfd;
-            border-top: 1px solid var(--ods-gray-100);
+            border-top: 1px solid var(--ods-gray-200);
             transition: opacity 0.3s;
         }
 
@@ -199,9 +202,9 @@
 
         @keyframes dots {
             0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
-            40% { color: var(--ods-orange); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
-            60% { text-shadow: .25em 0 0 var(--ods-orange), .5em 0 0 rgba(0,0,0,0); }
-            80%, 100% { text-shadow: .25em 0 0 var(--ods-orange), .5em 0 0 var(--ods-orange); }
+            40% { color: var(--ods-orange-100); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            60% { text-shadow: .25em 0 0 var(--ods-orange-100), .5em 0 0 rgba(0,0,0,0); }
+            80%, 100% { text-shadow: .25em 0 0 var(--ods-orange-100), .5em 0 0 var(--ods-orange-100); }
         }
 
         .fade-in {
@@ -214,9 +217,17 @@
         }
     </style>
 
-    <div class="container-fluid container-fluid-custom">
-        <header class="page-header">
+    <div class="">
+        <header class="page-header d-flex justify-content-between align-items-center">
             <h2 class="fw-bold m-0">Trainee Records</h2>
+            <div class="d-flex gap-2">
+                <a href="{{ route('export.all') }}" class="btn btn-outline-dark fw-bold">
+                    <i class="fa fa-download me-2"></i>Export Excel
+                </a>
+                <button type="button" class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#importModal">
+                    <i class="fa fa-upload me-2"></i>Import Excel
+                </button>
+            </div>
         </header>
 
         {{-- SEARCH + FILTERS --}}
@@ -286,6 +297,49 @@
         {{-- PAGINATION BUTTONS --}}
         <div class="d-flex justify-content-center">
             <div class="d-flex pagination-container" id="pagination_container"></div>
+        </div>
+    </div>
+
+    {{-- IMPORT MODAL --}}
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="modal-header border-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold" id="importModalLabel">Import Trainees</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('trainees.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body p-4">
+                        <div class="alert alert-info border-0" style="background-color: var(--ods-gray-100); border-radius: 12px;">
+                            <div class="d-flex">
+                                <i class="fa fa-info-circle me-3 mt-1 text-primary"></i>
+                                <div class="small">
+                                    <p class="mb-1 fw-bold">Instructions:</p>
+                                    <ul class="mb-0 ps-3">
+                                        <li>Supported formats: <strong>XLSX, XLS, CSV</strong></li>
+                                        <li>Ensure the heading row matches the system requirements</li>
+                                        <li>Duplicate emails will be skipped or updated</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 mt-4">
+                            <label for="import_file" class="filter-label mb-2">Select Spreadsheet File</label>
+                            <div class="input-group">
+                                <input type="file" name="file" class="form-control search-input pt-2" id="import_file" accept=".xlsx, .xls, .csv" required>
+                                <label class="input-group-text btn-dark" for="import_file"><i class="fa fa-file-excel"></i></label>
+                            </div>
+                            <div class="form-text mt-2 small">Max file size: 10MB</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pb-4 px-4">
+                        <button type="button" class="btn btn-outline-dark fw-bold px-4" style="border-radius: 10px;" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary fw-bold px-4" style="border-radius: 10px; background-color: var(--ods-orange-100); border-color: var(--ods-orange-100);">Process Import</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @endsection

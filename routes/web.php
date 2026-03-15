@@ -74,6 +74,7 @@ Route::get('/academy/{academy}',[DashboardController::class,'academyDashboard'])
 
 Auth::routes();
 Route::get('/home', [DashboardController::class,'jobcoachDashboard'])->name('jobcoachDashboard')->middleware('auth');
+Route::get('/statistics', [DashboardController::class,'statisticsDashboard'])->name('statistics.dashboard')->middleware('auth');
 //Route::get('/home', [DashboardController::class,'jobcoachDashboard'])->name('jobcoachDashboard')->middleware('auth');
 
 Route::prefix('ets')->middleware('auth')->group(function () {

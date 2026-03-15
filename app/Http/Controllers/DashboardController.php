@@ -8,8 +8,11 @@ use App\Models\Academy;
 use App\Models\Company;
 use App\Models\Trainee;
 use App\Models\Employer;
+use App\Models\EmploymentLog;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -237,13 +240,157 @@ foreach ($funds as $fund) {
 
 
     /**
-     * Displays the dashboard for a specific
-     *
-     *
-     *
-     *
-     *  with cohort-based employment data.
+     * Displays the statistics dashboard with advanced filtering and metrics.
      */
+    public function statisticsDashboard(Request $request)
+    {
+        $selectedAcademy = $request->get('academy_id');
+        $selectedDonor = $request->get('donor_id');
+
+        $academies = Academy::all();
+        $donors = Fund::all();
+
+        // Base Trainee queries for Global Stats
+        $globalQuery = Trainee::query();
+        if ($selectedAcademy) $globalQuery->where('academy_id', $selectedAcademy);
+        if ($selectedDonor) {
+            $globalQuery->whereHas('cohort', function ($q) use ($selectedDonor) {
+                $q->where('fund_id', $selectedDonor);
+            });
+        }
+
+        $global = [
+            'trainees' => (clone $globalQuery)->count(),
+            'graduates' => (clone $globalQuery)->whereRaw("LOWER(graduated) = 'yes'")->count(),
+            'employed' => (clone $globalQuery)->where('employment_status', 'employed')->whereRaw("LOWER(graduated) = 'yes'")->count(),
+            'available' => (clone $globalQuery)->where('employment_status', 'unemployed')->whereRaw("LOWER(graduated) = 'yes'")->count(),
+            'male' => (clone $globalQuery)->where('gender', 'male')->count(),
+            'female' => (clone $globalQuery)->where('gender', 'female')->count(),
+        ];
+        $global['employment_rate'] = $global['graduates'] > 0 ? round(($global['employed'] / $global['graduates']) * 100, 1) : 0;
+
+        // 1. Academy Performance Data
+        $employmentData = [];
+        $academyLoop = $selectedAcademy ? Academy::where('id', $selectedAcademy)->get() : $academies;
+
+        foreach ($academyLoop as $academy) {
+            $baseQuery = Trainee::where('academy_id', $academy->id);
+            if ($selectedDonor) {
+                $baseQuery->whereHas('cohort', function ($q) use ($selectedDonor) {
+                    $q->where('fund_id', $selectedDonor);
+                });
+            }
+
+            $totalTrainees = (clone $baseQuery)->count();
+            if ($totalTrainees == 0) continue;
+
+            $maleTrainees = (clone $baseQuery)->where('gender', 'male')->count();
+            $femaleTrainees = (clone $baseQuery)->where('gender', 'female')->count();
+
+            $totalGraduates = (clone $baseQuery)->whereRaw("LOWER(graduated) = 'yes'")->count();
+            $maleGraduates = (clone $baseQuery)->where('gender', 'male')->whereRaw("LOWER(graduated) = 'yes'")->count();
+            $femaleGraduates = (clone $baseQuery)->where('gender', 'female')->whereRaw("LOWER(graduated) = 'yes'")->count();
+
+            $totalEmployed = (clone $baseQuery)->where('employment_status', 'employed')->whereRaw("LOWER(graduated) = 'yes'")->count();
+            $maleEmployed = (clone $baseQuery)->where('gender', 'male')->where('employment_status', 'employed')->whereRaw("LOWER(graduated) = 'yes'")->count();
+            $femaleEmployed = (clone $baseQuery)->where('gender', 'female')->where('employment_status', 'employed')->whereRaw("LOWER(graduated) = 'yes'")->count();
+
+            $totalAvailable = (clone $baseQuery)->where('employment_status', 'unemployed')->whereRaw("LOWER(graduated) = 'yes'")->count();
+            $maleAvailable = (clone $baseQuery)->where('gender', 'male')->where('employment_status', 'unemployed')->whereRaw("LOWER(graduated) = 'yes'")->count();
+            $femaleAvailable = (clone $baseQuery)->where('gender', 'female')->where('employment_status', 'unemployed')->whereRaw("LOWER(graduated) = 'yes'")->count();
+
+            $employmentData[] = [
+                'academy' => $academy->name,
+                'trainees' => [
+                    'total' => $totalTrainees,
+                    'male' => $maleTrainees, 'female' => $femaleTrainees,
+                    'male_percent' => $totalTrainees > 0 ? round(($maleTrainees / $totalTrainees) * 100, 1) : 0,
+                    'female_percent' => $totalTrainees > 0 ? round(($femaleTrainees / $totalTrainees) * 100, 1) : 0,
+                ],
+                'graduates' => [
+                    'total' => $totalGraduates,
+                    'male' => $maleGraduates, 'female' => $femaleGraduates,
+                    'male_percent' => $totalGraduates > 0 ? round(($maleGraduates / $totalGraduates) * 100, 1) : 0,
+                    'female_percent' => $totalGraduates > 0 ? round(($femaleGraduates / $totalGraduates) * 100, 1) : 0,
+                ],
+                'employed' => [
+                    'total' => $totalEmployed,
+                    'male' => $maleEmployed, 'female' => $femaleEmployed,
+                    'male_percent' => $totalEmployed > 0 ? round(($maleEmployed / $totalEmployed) * 100, 1) : 0,
+                    'female_percent' => $totalEmployed > 0 ? round(($femaleEmployed / $totalEmployed) * 100, 1) : 0,
+                    'overall_rate' => $totalGraduates > 0 ? round(($totalEmployed / $totalGraduates) * 100, 1) : 0,
+                ],
+                'available' => [
+                    'total' => $totalAvailable,
+                    'male' => $maleAvailable, 'female' => $femaleAvailable,
+                    'male_percent' => $totalAvailable > 0 ? round(($maleAvailable / $totalAvailable) * 100, 1) : 0,
+                    'female_percent' => $totalAvailable > 0 ? round(($femaleAvailable / $totalAvailable) * 100, 1) : 0,
+                ],
+            ];
+        }
+
+        // 2. Yearly Performance Data
+        $yearlyData = [];
+        $yearsList = Cohort::select(DB::raw('YEAR(start_date) as year'))
+            ->groupBy('year')
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        foreach ($yearsList as $year) {
+            $baseQuery = Trainee::whereHas('cohort', function ($q) use ($year, $selectedDonor) {
+                $q->whereYear('start_date', $year);
+                if ($selectedDonor) $q->where('fund_id', $selectedDonor);
+            });
+            if ($selectedAcademy) $baseQuery->where('academy_id', $selectedAcademy);
+
+            $totalTrainees = (clone $baseQuery)->count();
+            if ($totalTrainees == 0) continue;
+
+            $yearlyData[] = [
+                'year' => $year,
+                'trainees' => [
+                    'total' => $totalTrainees,
+                    'male' => (clone $baseQuery)->where('gender', 'male')->count(),
+                    'female' => (clone $baseQuery)->where('gender', 'female')->count(),
+                ],
+                'graduates' => [
+                    'total' => (clone $baseQuery)->whereRaw("LOWER(graduated) = 'yes'")->count(),
+                    'male' => (clone $baseQuery)->where('gender', 'male')->whereRaw("LOWER(graduated) = 'yes'")->count(),
+                    'female' => (clone $baseQuery)->where('gender', 'female')->whereRaw("LOWER(graduated) = 'yes'")->count(),
+                ],
+                'employed' => [
+                    'total' => (clone $baseQuery)->where('employment_status', 'employed')->whereRaw("LOWER(graduated) = 'yes'")->count(),
+                    'male' => (clone $baseQuery)->where('gender', 'male')->where('employment_status', 'employed')->whereRaw("LOWER(graduated) = 'yes'")->count(),
+                    'female' => (clone $baseQuery)->where('gender', 'female')->where('employment_status', 'employed')->whereRaw("LOWER(graduated) = 'yes'")->count(),
+                ],
+                'available' => [
+                    'total' => (clone $baseQuery)->where('employment_status', 'unemployed')->whereRaw("LOWER(graduated) = 'yes'")->count(),
+                ],
+            ];
+            $lastIndex = count($yearlyData) - 1;
+            $yearlyData[$lastIndex]['employment_rate'] = $yearlyData[$lastIndex]['graduates']['total'] > 0 
+                ? round(($yearlyData[$lastIndex]['employed']['total'] / $yearlyData[$lastIndex]['graduates']['total']) * 100, 1) : 0;
+        }
+
+        // 3. Company Hiring Metrics (Cumulative Student Hires)
+        // We look at trainees who are 'employed' and have an employment log or related company record.
+        // For simplicity, we'll join Trainee with EmploymentLog and group by company name or company_id
+        $companyHires = EmploymentLog::join('trainees', 'employment_logs.trainee_id', '=', 'trainees.id')
+            ->join('cohorts', 'trainees.cohort_id', '=', 'cohorts.id')
+            ->select('employment_logs.company as company_name', DB::raw('count(DISTINCT trainees.id) as graduates_hired'))
+            ->when($selectedAcademy, fn($q) => $q->where('trainees.academy_id', $selectedAcademy))
+            ->when($selectedDonor, fn($q) => $q->where('cohorts.fund_id', $selectedDonor))
+            ->groupBy('company_name')
+            ->orderBy('graduates_hired', 'desc')
+            ->limit(10)
+            ->get();
+
+        return view('admin.dashboard.statistics', compact(
+            'employmentData', 'global', 'academies', 'donors', 
+            'selectedAcademy', 'selectedDonor', 'yearlyData', 'companyHires'
+        ));
+    }
+
     public function academyDashboard(Academy $academy)
     {
         // Retrieve cohorts and their trainees for the specified academy

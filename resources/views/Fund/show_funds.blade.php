@@ -2,141 +2,135 @@
 
 @section('content')
     <style>
+        /* --- BRANDED ODS VARIABLES --- */
         :root {
-            /* Orange Design System (ODS) Color Tokens */
-            --ods-orange-100: #ff7900;
-            --ods-orange-200: #f16e00;
-            --ods-white-100: #ffffff;
-            --ods-gray-200: #eeeeee;
-            --ods-gray-300: #dddddd;
-            --ods-gray-400: #cccccc;
-            --ods-gray-500: #999999;
-            --ods-gray-600: #666666;
-            --ods-gray-700: #595959;
-            --ods-gray-800: #333333;
-            --ods-gray-900: #141414;
-            --ods-black-900: #000000;
+            /* --- BRANDED ODS VARIABLES (Official Boosted Palette) --- */
+            --ods-orange-100: #FF7900;
+            --ods-orange-200: #F16E00;
+            --ods-white:      #FFFFFF;
+            --ods-black:      #000000;
             
-            --ods-forest-100: #66cc66;
-            --ods-forest-200: #228722;
+            /* Grays */
+            --ods-gray-100:   #FAFAFA;
+            --ods-gray-200:   #F6F6F6;
+            --ods-gray-300:   #EEEEEE;
+            --ods-gray-400:   #DDDDDD;
+            --ods-gray-500:   #CCCCCC;
+            --ods-gray-600:   #999999;
+            --ods-gray-700:   #666666;
+            --ods-gray-800:   #595959;
+            --ods-gray-900:   #333333;
+            --ods-gray-950:   #141414;
             
-            --ods-fire-100: #ff4d4d;
-            --ods-fire-200: #cd3c14;
+            /* Backgrounds & Borders */
+            --ods-p-bg:       #F9FAFB;
+            --ods-border:     var(--ods-gray-400);
+            
+            /* Functional */
+            --ods-success:    #228722; /* $ods-forest-200 */
+            --ods-danger:     #CD3C14; /* $ods-fire-200 */
         }
+
 
         .page-header {
-            margin-bottom: 2rem;
-            border-bottom: 2px solid var(--ods-black-900);
-            padding-bottom: 1rem;
+            margin-bottom: 2.5rem;
+            border-left: 5px solid var(--ods-orange-100);
+            padding-left: 1.5rem;
         }
 
-        .page-title {
-            font-weight: 700;
-            color: var(--ods-black-900);
-            text-transform: uppercase;
-            letter-spacing: -0.02em;
-            margin: 0;
-        }
-
-        /* Elevated Card Container */
-        .content-card {
-            background: white;
-            border-radius: 16px;
-            border: 1px solid var(--ods-gray-300);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-            overflow: hidden;
-            padding: 1.5rem;
-        }
-
-        /* Table Styling */
         .table-container {
-            border-radius: 12px;
+            background: var(--ods-white);
+            border-radius: 16px;
+            border: 1px solid var(--ods-border);
             overflow: hidden;
-            border: 1px solid var(--ods-gray-200);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            padding: 0; /* Override padding for fund card */
         }
 
-        .table {
-            margin-bottom: 0;
-        }
-
-        .table thead th {
-            background-color: var(--ods-black-900) !important;
-            color: var(--ods-white-100);
+        .table-custom thead th {
+            background: var(--ods-black) !important;
+            color: var(--ods-white) !important;
+            font-size: .75rem;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            font-weight: 700;
             letter-spacing: 0.05em;
-            padding: 1.25rem 1rem;
+            padding: 1.25rem 1.5rem;
             border: none;
         }
 
-        .table tbody td {
-            padding: 1.25rem 1rem;
+        .table-custom tbody td {
+            padding: 1.1rem 1.5rem;
+            font-size: .95rem;
+            border-bottom: 1px solid var(--ods-gray-300);
             vertical-align: middle;
-            border-bottom: 1px solid var(--ods-gray-200);
-            color: var(--ods-gray-800);
-            font-size: 0.9rem;
+            color: var(--ods-gray-900);
         }
 
-        .table tbody tr:last-child td {
+        .table-custom tbody tr:last-child td {
             border-bottom: none;
         }
 
-        .table tbody tr:hover td {
-            background-color: #fffaf5 !important;
+        .table-custom tbody tr:hover td {
+            background-color: var(--ods-gray-100) !important;
         }
 
         /* Badge Styling */
-        .badge {
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: .75rem;
             font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.65rem;
-            padding: 0.5em 1em;
-            letter-spacing: 0.05em;
-            border-radius: 6px;
+            display: inline-block;
+            min-width: 90px;
+            text-align: center;
         }
 
+        .status-active { background: rgba(34, 135, 34, 0.1); color: var(--ods-success); border: 1px solid rgba(34, 135, 34, 0.2); }
+        .status-expired { background: rgba(205, 60, 20, 0.1); color: var(--ods-danger); border: 1px solid rgba(205, 60, 20, 0.2); }
+
         /* Button Styling */
-        .btn-create {
+        .btn-ods-orange {
             background-color: var(--ods-orange-100);
             color: white;
             font-weight: 700;
-            text-transform: uppercase;
             border: none;
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
             transition: all 0.2s ease;
         }
 
-        .btn-create:hover {
+        .btn-ods-orange:hover {
             background-color: var(--ods-orange-200);
             color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(255, 121, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(255, 121, 0, 0.2);
         }
 
-        .btn-action {
-            font-weight: 600;
-            border-radius: 6px;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
+        .btn-icon {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
         }
 
         .btn-edit {
-            color: var(--ods-forest-200);
-            border: 1px solid var(--ods-forest-200);
-            background: transparent;
+            color: var(--ods-success);
+            border: 1px solid rgba(34, 135, 34, 0.2);
+            background: rgba(34, 135, 34, 0.05);
         }
 
         .btn-edit:hover {
-            background: var(--ods-forest-200);
+            background: var(--ods-success);
             color: white;
         }
 
         .btn-show {
             color: var(--ods-orange-100);
-            border: 1px solid var(--ods-orange-100);
-            background: transparent;
+            border: 1px solid rgba(255, 121, 0, 0.2);
+            background: rgba(255, 121, 0, 0.05);
         }
 
         .btn-show:hover {
@@ -145,33 +139,33 @@
         }
     </style>
 
-    <div class="container-fluid py-4">
+    <div class="">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert"
-                style="background-color: #e6f4ea; color: #1e7e34; border-left: 5px solid #228722 !important; border-radius: 8px;">
+                style="background-color: #e6f4ea; color: #1e7e34; border-left: 5px solid var(--ods-success) !important; border-radius: 12px;">
                 <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
-        <div class="page-header d-flex justify-content-between align-items-center">
-            <h2 class="page-title">Fund Management</h2>
-            <a href="{{ route('fund.createFund') }}" class="btn btn-create">
-                <i class="fas fa-plus me-2"></i> Create New Fund
+        <header class="page-header d-flex justify-content-between align-items-center">
+            <h2 class="fw-bold m-0">Fund Management</h2>
+            <a href="{{ route('fund.createFund') }}" class="btn btn-ods-orange fw-bold">
+                <i class="fas fa-plus me-2"></i>Create New Fund
             </a>
-        </div>
+        </header>
 
-        <div class="content-card">
-            <div class="table-responsive table-container">
-                <table id="funds-table" class="table table-hover">
+        <div class="table-container">
+            <div class="table-responsive">
+                <table id="funds-table" class="table table-custom mb-0">
                     <thead>
                         <tr>
-                            <th scope="col">Fund Name</th>
-                            <th scope="col">Start Date</th>
-                            <th scope="col">Period</th>
-                            <th scope="col">Expiry Date</th>
-                            <th scope="col" class="text-center">Status</th>
-                            <th scope="col" class="text-end">Actions</th>
+                            <th>Fund Name</th>
+                            <th>Start Date</th>
+                            <th>Period</th>
+                            <th>Expiry Date</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -179,35 +173,32 @@
                             <tr>
                                 <td class="fw-bold text-dark">{{ $fund->fund_name }}</td>
                                 <td>
-                                    <span class="text-muted"><i class="far fa-calendar-alt me-2"></i>{{ $fund->start_date }}</span>
+                                    <span class="text-muted small fw-bold"><i class="far fa-calendar-alt me-2 text-primary"></i>{{ $fund->start_date }}</span>
                                 </td>
                                 <td>
-                                    <span class="badge bg-light text-dark border fw-normal">{{ $fund->period }}</span>
+                                    <span class="text-muted small fw-bold">{{ $fund->period }}</span>
                                 </td>
                                 <td>
                                     @if ($fund->end_date)
-                                        <span class="text-muted"><i class="far fa-calendar-check me-2"></i>{{ $fund->end_date }}</span>
+                                        <span class="text-muted small fw-bold"><i class="far fa-calendar-check me-2 text-primary"></i>{{ $fund->end_date }}</span>
                                     @else
-                                        <span class="badge bg-light text-dark border fw-normal">Present</span>
+                                        <span class="text-muted small fw-bold">PRESENT</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @php
-                                        $statusColor = $fund->status === 'Active' ? 'var(--ods-forest-200)' : 'var(--ods-fire-200)';
-                                    @endphp
-                                    <span class="badge text-white" style="background-color: {{ $statusColor }}; min-width: 80px;">
-                                        {{ $fund->status }}
+                                    <span class="status-badge {{ strtolower($fund->status) === 'active' ? 'status-active' : 'status-expired' }}">
+                                        {{ strtoupper($fund->status) }}
                                     </span>
                                 </td>
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end gap-2">
                                         <a href="{{ route('fund.fund_update_info', [$fund->id]) }}"
-                                            class="btn btn-action btn-edit" title="Edit Fund">
-                                            <i class="fas fa-edit me-1"></i> Edit
+                                            class="btn btn-icon btn-edit" title="Edit Fund">
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="{{ route('fund.show_cohort_related_fund', [$fund->id]) }}"
-                                            class="btn btn-action btn-show" title="View Cohorts">
-                                            <i class="fas fa-eye me-1"></i> Show
+                                            class="btn btn-icon btn-show" title="Show Details">
+                                            <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
                                 </td>
