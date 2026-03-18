@@ -10,7 +10,7 @@ class SurveyLogController extends Controller
     {
         $surveyLogs = SurveyLog::all(); // You can modify this to fetch logs as needed
 
-        return view('survey.survey-logs', ['surveyLogs' => $surveyLogs]);
+        return view('Survey.survey-logs', ['surveyLogs' => $surveyLogs]);
     }
 
     public function store(Request $request)
@@ -40,6 +40,6 @@ class SurveyLogController extends Controller
     }
 
     
-    
+
 }
  
