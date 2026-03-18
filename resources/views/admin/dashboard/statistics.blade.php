@@ -348,10 +348,7 @@
                 </div>
             </div>
             
-            <div class="alert bg-white border-0 shadow-sm" style="border-radius: 16px;">
-                 <h6 class="fw-bold mb-2"><i class="fas fa-info-circle text-muted me-2"></i> Data Integrity</h6>
-                 <p class="small text-muted mb-0">Statistics are updated based on real-time employment logs and graduation status changes.</p>
-            </div>
+           
         </div>
     </div>
     @else
