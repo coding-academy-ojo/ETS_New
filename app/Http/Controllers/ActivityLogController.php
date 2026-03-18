@@ -23,6 +23,16 @@ class ActivityLogController extends Controller
         //    dd($logs);
         return view('user_role.notification_page', compact('logs'));
         // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
+        // return view('user_role.notification_page', compact('logs'));
     }
 
     public function markAsRead(ActivityLog $log)

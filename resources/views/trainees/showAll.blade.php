@@ -250,7 +250,7 @@
                     <select id="academy_filter" class="form-control search-input">
                         <option value="">All</option>
                         @foreach($trainees->pluck('academy.name')->unique()->filter() as $academy)
-                            <option value="{{ $academy }}">{{ $academy }}</option>
+                            <option value="{{ $academy }}">{{ strtolower($academy) === 'balga' ? 'Balqa' : $academy }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -419,8 +419,16 @@
                 const status = t.employment_status || 'Active';
                 const sLower = status.toLowerCase();
                 const statusClass = sLower === 'employed' ? 'status-employed' : (sLower === 'unemployed' ? 'status-unemployed' : 'status-default');
-                const academyName = (t.academy && t.academy.name) || 'ODC';
-                const cohortName = (t.cohort && t.cohort.name) || '-';
+                let academyName = (t.academy && t.academy.name) || 'ODC';
+                if (academyName.toLowerCase() === 'balga') academyName = 'Balqa';
+
+                let cohortName = '-';
+                if (t.cohort) {
+                    cohortName = t.cohort.slug || t.cohort.name || '-';
+                    if (cohortName.toLowerCase().startsWith('balqa-')) {
+                        cohortName = cohortName.replace(/balqa-\s*/i, 'cohort ');
+                    }
+                }
                 const eduBack = (t.educational_background || 'N/A').toUpperCase();
                 
                 htmlBuffer += 
