@@ -1,64 +1,273 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+````md
+## 🎯 Learning Objectives
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+By the end of this module, trainees will be able to:
 
-## About Laravel
+1. Understand what **Bootstrap** is and how it works.
+2. Use the **Bootstrap Grid System (12-column layout)** effectively.
+3. Apply **Bootstrap classes** to build responsive layouts.
+4. Include Bootstrap in a project using **CDN or local files**.
+5. Build responsive UI components using Bootstrap utilities.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 1. What is Bootstrap?
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 📌 Definition
 
-## Learning Laravel
+**Bootstrap** is a popular front-end framework that helps developers build responsive and mobile-first websites quickly using pre-built CSS and JavaScript components.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🚀 Why Use Bootstrap?
 
-## Laravel Sponsors
+- Speeds up development
+- Provides ready-to-use components (buttons, forms, navbar, etc.)
+- Built-in **responsive grid system**
+- Consistent design across browsers
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+---
 
-### Premium Partners
+## 2. How to Add Bootstrap to Your Project
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### ✅ Option 1: Using CDN (Recommended for beginners)
 
-## Contributing
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
 
-## Code of Conduct
+  <h1 class="text-center">Hello Bootstrap 👋</h1>
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+````
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### ✅ Option 2: Download Bootstrap
 
-## License
+1. Go to: [https://getbootstrap.com](https://getbootstrap.com)
+2. Download files
+3. Include in your project:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```html
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="js/bootstrap.bundle.min.js"></script>
+```
+
+---
+
+## 3. Bootstrap Grid System (12 Columns)
+
+### 📌 What is the Grid System?
+
+Bootstrap divides the page into **12 columns**. You can use these columns to create flexible and responsive layouts.
+
+---
+
+### 🧠 Key Concept
+
+* The page is divided into **12 equal columns**
+* You can combine columns (e.g., 6 + 6, 4 + 4 + 4)
+* Must be wrapped inside `.container` → `.row` → `.col`
+
+---
+
+### 💡 Example
+
+```html
+<div class="container">
+  <div class="row">
+    <div class="col-6 bg-primary text-white">Column 1</div>
+    <div class="col-6 bg-secondary text-white">Column 2</div>
+  </div>
+</div>
+```
+
+---
+
+### 📱 Responsive Columns
+
+```html
+<div class="row">
+  <div class="col-12 col-md-6 col-lg-4 bg-info">Responsive Column</div>
+</div>
+```
+
+| Class    | Meaning                     |
+| -------- | --------------------------- |
+| col-12   | Full width on small screens |
+| col-md-6 | Half width on tablets       |
+| col-lg-4 | One-third on large screens  |
+
+---
+
+### 🧠 Exercise 1
+
+* Create a layout with:
+
+  * 3 equal columns on desktop
+  * 1 column on mobile
+
+---
+
+## 4. Understanding Bootstrap Classes
+
+### 📌 What are Classes?
+
+Bootstrap uses predefined **CSS classes** to style elements.
+
+---
+
+### 💡 Examples
+
+```html
+<button class="btn btn-primary">Click Me</button>
+
+<p class="text-danger">Error message</p>
+
+<div class="p-3 m-2 bg-light">Box with padding & margin</div>
+```
+
+---
+
+### 📊 Common Class Categories
+
+| Category   | Example                            |
+| ---------- | ---------------------------------- |
+| Colors     | `text-primary`, `bg-dark`          |
+| Spacing    | `p-3`, `m-2`                       |
+| Flexbox    | `d-flex`, `justify-content-center` |
+| Typography | `fw-bold`, `text-center`           |
+
+---
+
+### 🧠 Exercise 2
+
+* Create a button using Bootstrap
+* Add spacing and color utilities
+
+---
+
+## 5. Bootstrap Components
+
+### 📌 What are Components?
+
+Reusable UI elements like:
+
+* Buttons
+* Cards
+* Navbar
+* Modals
+* Alerts
+
+---
+
+### 💡 Example: Card Component
+
+```html
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Product</h5>
+    <p class="card-text">This is a simple card.</p>
+    <a href="#" class="btn btn-primary">Buy Now</a>
+  </div>
+</div>
+```
+
+---
+
+### 🧠 Exercise 3
+
+* Create a product card using Bootstrap
+* Add button and text styling
+
+---
+
+## 6. Responsive Design with Bootstrap
+
+Bootstrap uses **breakpoints**:
+
+| Breakpoint | Screen Size |
+| ---------- | ----------- |
+| sm         | ≥576px      |
+| md         | ≥768px      |
+| lg         | ≥992px      |
+| xl         | ≥1200px     |
+
+---
+
+### 💡 Example
+
+```html
+<div class="col-12 col-sm-6 col-lg-3">
+  Responsive Box
+</div>
+```
+
+---
+
+## 📌 Task
+
+Create a responsive webpage that includes:
+
+* Bootstrap CDN integration
+* Grid layout (12-column system)
+* At least 2 components (card, button, navbar)
+* Responsive behavior across devices
+
+---
+
+## ✅ Summary
+
+* Bootstrap is a powerful front-end framework
+* It uses a **12-column grid system**
+* Classes control layout, spacing, and styling
+* Easily integrated using CDN or download
+* Helps build responsive websites quickly
+
+---
+
+## 🧠 Final Outcomes
+
+Trainees will be able to:
+
+* Use Bootstrap in real projects
+* Build responsive layouts using grid system
+* Apply utility classes effectively
+* Create UI components بسرعة واحترافية
+
+---
+
+## 💡 What I Know Now
+
+* [ ] I understand what Bootstrap is and why it is used
+* [ ] I can use the **12-column grid system**
+* [ ] I know how to add Bootstrap via CDN
+* [ ] I can use Bootstrap classes for styling
+* [ ] I can build responsive layouts using Bootstrap
+
+---
+
+### 📙 References
+
+1. Bootstrap Official Docs: [https://getbootstrap.com](https://getbootstrap.com)
+2. Bootstrap Grid System: [https://getbootstrap.com/docs/5.3/layout/grid/](https://getbootstrap.com/docs/5.3/layout/grid/)
+3. Bootstrap Utilities: [https://getbootstrap.com/docs/5.3/utilities/](https://getbootstrap.com/docs/5.3/utilities/)
+
+---
+
+👉 **Go to Next Module → Advanced Bootstrap & Layouts**
+
+```
+```

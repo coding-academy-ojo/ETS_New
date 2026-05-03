@@ -17,6 +17,7 @@ class Kernel extends HttpKernel
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \Fruitcake\Cors\HandleCors::class,
+        // \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
@@ -38,7 +39,6 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
-
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
@@ -63,8 +63,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'CheckUserRole'=>\App\Http\Middleware\CheckUserRole::class,
-        'EmployeerMiddleware'=>\App\Http\Middleware\EmployeerMiddleware::class,
+        'CheckUserRole' => \App\Http\Middleware\CheckUserRole::class,
+        'EmployeerMiddleware' => \App\Http\Middleware\EmployeerMiddleware::class,
         'check.employer.status' => \App\Http\Middleware\CheckEmployerStatus::class,
     ];
 }

@@ -141,7 +141,7 @@
     <!-- Filters -->
     <div class="filter-card">
         <form action="{{ route('statistics.dashboard') }}" method="GET" class="row g-3 align-items-end">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label class="form-label small fw-bold text-uppercase">Donor / Fund</label>
                 <select name="donor_id" class="form-select border-0 bg-light shadow-none">
                     <option value="">All Donors</option>
@@ -150,7 +150,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label class="form-label small fw-bold text-uppercase">Location / Academy</label>
                 <select name="academy_id" class="form-select border-0 bg-light shadow-none">
                     <option value="">All Academies</option>
@@ -159,9 +159,25 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
+                <label class="form-label small fw-bold text-uppercase">Year</label>
+                <select name="year" class="form-select border-0 bg-light shadow-none">
+                    <option value="">Any</option>
+                    @foreach($years as $yearOpt)
+                        <option value="{{ $yearOpt }}" {{ isset($selectedYear) && $selectedYear == $yearOpt ? 'selected' : '' }}>{{ $yearOpt }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-bold text-uppercase">Filter By</label>
+                <select name="year_type" class="form-select border-0 bg-light shadow-none">
+                    <option value="start" {{ isset($selectedYearType) && $selectedYearType == 'start' ? 'selected' : '' }}>Start Year</option>
+                    <option value="end" {{ isset($selectedYearType) && $selectedYearType == 'end' ? 'selected' : '' }}>End Year</option>
+                </select>
+            </div>
+            <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100 shadow-sm" style="background: var(--orange-primary); border: none;">
-                    <i class="fas fa-filter me-2"></i> Apply Filters
+                    <i class="fas fa-filter me-2"></i> Filter
                 </button>
             </div>
         </form>
