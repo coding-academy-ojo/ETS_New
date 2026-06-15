@@ -66,6 +66,8 @@ class CompanyController extends Controller
 
                 // Store only file name in DB
                 $validatedData['company_img'] = $imageName;
+            } else {
+                $validatedData['company_img'] = 'null';
             }
 
             // Create the company record
@@ -109,7 +111,7 @@ class CompanyController extends Controller
             }
 
             // Delete old image if exists
-            if ($company->company_img && File::exists($destinationPath . '/' . $company->company_img)) {
+            if ($company->company_img && $company->company_img !== 'null' && File::exists($destinationPath . '/' . $company->company_img)) {
                 File::delete($destinationPath . '/' . $company->company_img);
             }
 

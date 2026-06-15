@@ -7,7 +7,7 @@
             @csrf
             <div class="form-group">
                 <label for="company_name">Company Name</label>
-                <input type="text" name="company_name" id="company_name" class="form-control">
+                <input type="text" name="company_name" id="company_name" class="form-control" required>
             </div>
 
             <div class="form-group">
@@ -36,7 +36,7 @@
                 </small>
             </div>
 
-            <button type="submit" id="createBtn" class="btn btn-primary" disabled>
+            <button type="submit" id="createBtn" class="btn btn-primary">
                 Create Company
             </button>
         </form>
@@ -54,7 +54,7 @@
 
                 if (!file) {
                     errorText.style.display = 'none';
-                    createBtn.disabled = true;
+                    createBtn.disabled = false;
                     // Reset to placeholder if no file selected
                     previewImg.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbt4ZISe4q1wf5oxPp0TsOTqMm3fVvw-QvLGoGqNWOxevAyWplBqVcrbHuqc7IQj5I3d8&usqp=CAU";
                     return;

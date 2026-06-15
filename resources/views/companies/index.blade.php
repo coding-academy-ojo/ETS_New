@@ -220,7 +220,7 @@
                                 <td class="text-center">
                                     @php
                                         $imagePath = public_path('assets/co_icon/' . $company->company_img);
-                                        $imageUrl = (isset($company->company_img) && !empty($company->company_img) && File::exists($imagePath))
+                                        $imageUrl = (isset($company->company_img) && !empty($company->company_img) && $company->company_img !== 'null' && File::exists($imagePath))
                                                     ? asset('assets/co_icon/' . $company->company_img)
                                                     : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbt4ZISe4q1wf5oxPp0TsOTqMm3fVvw-QvLGoGqNWOxevAyWplBqVcrbHuqc7IQj5I3d8&usqp=CAU';
                                     @endphp
