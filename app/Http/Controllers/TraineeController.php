@@ -525,3 +525,6 @@ class TraineeController extends Controller
             ->with('success', 'Log updated successfully.');
     }
 }
+
+
+// new update
