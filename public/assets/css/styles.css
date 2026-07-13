@@ -1,17 +1,53 @@
 @charset "UTF-8";
-/* Dashboard Layout Styles */
-:root
-{
-    --sidebar-width: 250px;
-    --sidebar-bg: #000;
-    --sidebar-color: #fff;
-    --top-navbar-height: 70px;
+/* ====================================================================
+   ETS Dashboard — Orange Design System
+   Based on Orange Boosted Design Tokens
+   ==================================================================== */
+
+:root {
+    /* === Orange Brand Colors === */
+    --ods-orange-100:       #FF7900;
+    --ods-orange-200:       #F16E00;
+    --ods-orange-bg:        #FFF0E0;
+    --ods-black:            #000000;
+    --ods-white:            #FFFFFF;
+
+    /* === Neutrals === */
+    --ods-gray-100:         #FAFAFA;
+    --ods-gray-200:         #F6F6F6;
+    --ods-gray-300:         #EEEEEE;
+    --ods-gray-400:         #DDDDDD;
+    --ods-gray-500:         #CCCCCC;
+    --ods-gray-600:         #999999;
+    --ods-gray-700:         #666666;
+    --ods-gray-900:         #333333;
+
+    /* === Semantic === */
+    --ods-success:          #228722;
+    --ods-danger:           #CD3C14;
+    --ods-info:             #1E90FF;
+
+    /* === Layout Tokens === */
+    --sidebar-width:        250px;
+    --sidebar-bg:           var(--ods-black);
+    --sidebar-color:        var(--ods-white);
+    --top-navbar-height:    64px;
+    --ods-font-family:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
+
+/* ====================================================================
+   DASHBOARD SHELL
+   ==================================================================== */
 
 .dashboard-wrapper {
     display: flex;
     min-height: 100vh;
+    font-family: var(--ods-font-family);
 }
+
+/* ====================================================================
+   SIDEBAR
+   ==================================================================== */
 
 .sidebar {
     width: var(--sidebar-width) !important;
@@ -21,30 +57,140 @@
     height: 100vh !important;
     overflow-y: auto !important;
     z-index: 1000 !important;
-    transition: all 0.3s !important;
+    transition: transform 0.3s ease, left 0.3s ease !important;
     left: 0 !important;
     top: 0 !important;
+    border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Sidebar brand / header */
+.sidebar .sidebar-brand {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar .sidebar-brand .brand-logo {
+    width: 36px;
+    height: 36px;
+}
+
+.sidebar .sidebar-brand .brand-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+/* Sidebar navigation */
+.sidebar .nav-pills {
+    padding: 0.75rem 0.75rem;
+    gap: 2px;
 }
 
 .sidebar .nav-link {
-    color: #ccc;
-    padding: 1rem 1.5rem;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    transition: background 0.2s, color 0.2s;
+    color: rgba(255,255,255,0.7) !important;
+    padding: 0.7rem 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+    border-radius: 8px !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    gap: 12px !important;
 }
 
-.sidebar .nav-link:hover,
+.sidebar .nav-link i,
+.sidebar .nav-link .bi {
+    font-size: 1.15rem !important;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255,121,0,0.15) !important;
+    color: var(--ods-white) !important;
+}
+
 .sidebar .nav-link.active {
-    background-color: #ff7900;
-    color: #fff;
+    background-color: var(--ods-orange-100) !important;
+    color: var(--ods-white) !important;
+    font-weight: 600 !important;
 }
 
-.sidebar .nav-link i {
-    margin-right: 15px;
-    font-size: 1.2rem;
+/* Sidebar dropdowns (academy / companies) */
+.sidebar .sidebar-dropdown .nav-link {
+    position: relative;
 }
+
+.sidebar .sidebar-dropdown .nav-link::after {
+    margin-left: auto !important;
+}
+
+.sidebar .sidebar-dropdown .dropdown-menu {
+    position: static !important;
+    transform: none !important;
+    background: rgba(255,255,255,0.05) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    margin: 2px 0 4px 0 !important;
+    padding: 2px !important;
+}
+
+.sidebar .sidebar-dropdown .dropdown-item {
+    color: rgba(255,255,255,0.65) !important;
+    border-radius: 6px !important;
+    padding: 0.5rem 1rem 0.5rem 2.75rem !important;
+    font-size: 0.85rem !important;
+    transition: all 0.15s ease !important;
+}
+
+.sidebar .sidebar-dropdown .dropdown-item:hover {
+    background-color: rgba(255,121,0,0.15) !important;
+    color: var(--ods-white) !important;
+}
+
+.sidebar .sidebar-dropdown .dropdown-item.active {
+    background-color: var(--ods-orange-100) !important;
+    color: var(--ods-white) !important;
+}
+
+/* Sidebar divider */
+.sidebar hr {
+    border-color: rgba(255,255,255,0.08) !important;
+    margin: 0.5rem 1rem !important;
+    opacity: 1;
+}
+
+/* Sidebar user profile area */
+.sidebar .sidebar-user {
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: auto;
+}
+
+.sidebar .sidebar-user .dropdown-toggle {
+    color: rgba(255,255,255,0.8) !important;
+    text-decoration: none !important;
+    font-size: 0.85rem !important;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.sidebar .sidebar-user .dropdown-toggle:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+.sidebar .sidebar-user .dropdown-menu {
+    border-radius: 10px;
+    border: 1px solid var(--ods-gray-300);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* ====================================================================
+   CONTENT AREA
+   ==================================================================== */
 
 .content-area {
     margin-left: var(--sidebar-width) !important;
@@ -52,36 +198,125 @@
     display: flex !important;
     flex-direction: column !important;
     min-height: 100vh !important;
+    background-color: var(--ods-gray-100);
+    transition: margin-left 0.3s ease, width 0.3s ease !important;
 }
 
+/* ====================================================================
+   TOP NAVBAR
+   ==================================================================== */
+
 .top-navbar {
-    height: var(--top-navbar-height);
-    background-color: #fff;
-    border-bottom: 2px solid #000;
-    padding: 0 1.5rem; /* Reduced from 2rem */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 999;
+    height: var(--top-navbar-height) !important;
+    background: var(--ods-white) !important;
+    border-bottom: 2px solid var(--ods-black) !important;
+    padding: 0 1.5rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 999 !important;
 }
+
+.top-navbar .navbar-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ods-black);
+    margin: 0;
+}
+
+.top-navbar .btn-toggle {
+    color: var(--ods-gray-700) !important;
+    padding: 6px 8px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s;
+}
+
+.top-navbar .btn-toggle:hover {
+    background: var(--ods-gray-200);
+    color: var(--ods-black) !important;
+}
+
+/* Notification badge */
+.top-navbar .notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    font-size: 0.6rem;
+    padding: 2px 5px;
+    min-width: 16px;
+}
+
+/* ====================================================================
+   MAIN CONTENT
+   ==================================================================== */
 
 .main-content {
     padding: 1.5rem;
     flex-grow: 1;
 }
 
-@media(max-width: 992px) {
+/* ====================================================================
+   FOOTER
+   ==================================================================== */
+
+.o-footer {
+    background: var(--ods-white);
+    border-top: 1px solid var(--ods-gray-300) !important;
+    padding: 1rem 1.5rem !important;
+    font-size: 0.8rem;
+}
+
+.o-footer a {
+    color: var(--ods-gray-700);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.o-footer a:hover {
+    color: var(--ods-orange-100);
+}
+
+/* ====================================================================
+   SIDEBAR COLLAPSED STATE (Desktop >= 993px)
+   ==================================================================== */
+
+@media (min-width: 993px) {
     .sidebar {
-        margin-left: calc(-1 * var(--sidebar-width));
-    }
-    .sidebar.show {
-        margin-left: 0;
+        left: 0 !important;
     }
     .content-area {
-        margin-left: 0;
-        width: 100%;
+        margin-left: var(--sidebar-width) !important;
+        width: calc(100% - var(--sidebar-width)) !important;
+    }
+    .sidebar-collapsed .sidebar {
+        left: calc(-1 * var(--sidebar-width)) !important;
+    }
+    .sidebar-collapsed .content-area {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+}
+
+/* ====================================================================
+   MOBILE (width <= 992px)
+   ==================================================================== */
+
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(calc(-1 * var(--sidebar-width)));
+        left: 0 !important;
+    }
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    .content-area {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    .top-navbar .navbar-title {
+        font-size: 0.95rem;
     }
 }
 

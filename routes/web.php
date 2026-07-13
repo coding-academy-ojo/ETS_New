@@ -148,6 +148,7 @@ Route::prefix('ets')->middleware('auth')->group(function () {
     Route::get('/names_companies', [CompanyController::class,'show'])->name('names_companies.showCompaniesForm');
 
     Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
+    Route::get('/company-statistics', [CompanyController::class, 'statistics'])->name('companies.statistics');
     Route::get('/companies/filter', [CompanyController::class, 'filter'])->name('companies.filter');
     Route::get('/employees.search', [EmployerController::class, 'fillter'])->name('employees.fillter');
     Route::get('/search-companies', [CompanyController::class, 'searchCompanies'])->name('search.companies');
