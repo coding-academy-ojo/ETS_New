@@ -31,7 +31,7 @@
 </style>
 
 <div class="container mt-5">
-    <h1 class="mb-4 text-center display-4">Trainees List</h1>
+    <h1 class="mb-4 text-center display-4">Trainees List[p-</h1>
 
     <div class="d-flex justify-content-between mb-4">
         @if ($academy)

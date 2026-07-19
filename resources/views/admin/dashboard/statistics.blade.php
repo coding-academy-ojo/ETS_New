@@ -117,6 +117,7 @@
         transition: background 0.2s;
     }
     .hiring-item:hover { background: #eee; }
+    .hiring-item { cursor: pointer; }
     .hiring-name { font-weight: 600; font-size: 0.9rem; }
     .hiring-count { font-weight: 800; color: var(--orange-primary); font-size: 1.1rem; }
 
@@ -350,7 +351,7 @@
                     
                     @if($companyHires->count() > 0)
                         @foreach($companyHires as $hire)
-                            <div class="hiring-item">
+                            <div class="hiring-item" role="button" data-company="{{ $hire->company_name }}" data-bs-toggle="modal" data-bs-target="#hiredTraineesModal">
                                 <span class="hiring-name">{{ $hire->company_name }}</span>
                                 <span class="hiring-count">{{ $hire->graduates_hired }}</span>
                             </div>
@@ -376,4 +377,55 @@
     </div>
     @endif
 </div>
+<!-- Hired Trainees Modal -->
+<div class="modal fade" id="hiredTraineesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="hiredTraineesModalLabel">Hired Trainees</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-3" id="hiredTraineesBody">
+                <div class="text-center py-4 text-muted">
+                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                    Loading...
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const companyTrainees = @json($companyTrainees);
+        const modal = document.getElementById('hiredTraineesModal');
+        const modalTitle = document.getElementById('hiredTraineesModalLabel');
+        const modalBody = document.getElementById('hiredTraineesBody');
+
+        modal.addEventListener('show.bs.modal', function(event) {
+            const company = event.relatedTarget.getAttribute('data-company');
+            const trainees = companyTrainees[company] || [];
+
+            modalTitle.textContent = company + ' — Hired Trainees';
+
+            if (trainees.length === 0) {
+                modalBody.innerHTML = '<div class="text-center py-4 text-muted"><i class="bi bi-people fs-1 d-block mb-2"></i>No trainee records found.</div>';
+                return;
+            }
+
+            let html = '';
+            trainees.forEach(function(t) {
+                const profileUrl = '{{ route("trainees.profile", ["id" => "TRAINEE_ID"]) }}'.replace('TRAINEE_ID', t.id);
+                html += '<div class="d-flex align-items-center justify-content-between p-2 rounded mb-1" style="background: #f8f9fa;">' +
+                        '<span class="fw-semibold">' + t.name + '</span>' +
+                        '<a href="' + profileUrl + '"target="_blank" rel="noopener noreferrer"  class="btn btn-sm btn-outline-dark" title="View Profile"><i class="bi bi-eye-fill"></i></a>' +
+                        '</div>';
+            });
+            modalBody.innerHTML = html;
+        });
+    });
+</script>
 @endsection

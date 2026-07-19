@@ -411,6 +411,9 @@ class DashboardController extends Controller
         $companyHires = EmploymentLog::join('trainees', 'employment_logs.trainee_id', '=', 'trainees.id')
             ->join('cohorts', 'trainees.cohort_id', '=', 'cohorts.id')
             ->select('employment_logs.company as company_name', DB::raw('count(DISTINCT trainees.id) as graduates_hired'))
+            ->where('employment_logs.company', '!=', 'N/A')
+            ->where('employment_logs.company', '!=', '')
+            ->whereNotNull('employment_logs.company')
             ->when($selectedAcademy, fn($q) => $q->where('trainees.academy_id', $selectedAcademy))
             ->when($selectedDonor, fn($q) => $q->where('cohorts.fund_id', $selectedDonor))
             ->when($selectedYear, function($q) use ($selectedYear, $selectedYearType) {
@@ -425,10 +428,51 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
+        // Trainee details per company (for modal)
+        $companyTrainees = EmploymentLog::join('trainees', 'employment_logs.trainee_id', '=', 'trainees.id')
+            ->join('cohorts', 'trainees.cohort_id', '=', 'cohorts.id')
+            ->select(
+                'employment_logs.company as company_name',
+                'trainees.id as trainee_id',
+                'trainees.first_name',
+                'trainees.second_name',
+                'trainees.third_name',
+                'trainees.last_name'
+            )
+            ->where('employment_logs.company', '!=', 'N/A')
+            ->where('employment_logs.company', '!=', '')
+            ->whereNotNull('employment_logs.company')
+            ->when($selectedAcademy, fn($q) => $q->where('trainees.academy_id', $selectedAcademy))
+            ->when($selectedDonor, fn($q) => $q->where('cohorts.fund_id', $selectedDonor))
+            ->when($selectedYear, function($q) use ($selectedYear, $selectedYearType) {
+                if ($selectedYearType === 'end') {
+                    $q->whereYear('cohorts.end_date', $selectedYear);
+                } else {
+                    $q->whereYear('cohorts.start_date', $selectedYear);
+                }
+            })
+            ->whereIn('employment_logs.status', [
+                'job offer', 'internship for employment', 'freelance',
+                'internship_for_employment', 'Job Offer', 'Internship for Employment', 'Freelance',
+            ])
+            ->get()
+            ->groupBy('company_name')
+            ->map(function($group) {
+                return $group->map(function($item) {
+                    $name = trim(implode(' ', array_filter([
+                        $item->first_name,
+                        $item->second_name,
+                        $item->third_name,
+                        $item->last_name,
+                    ])));
+                    return ['id' => $item->trainee_id, 'name' => $name ?: 'Unknown'];
+                })->values();
+            });
+
         return view('admin.dashboard.statistics', compact(
             'employmentData', 'global', 'academies', 'donors',
             'selectedAcademy', 'selectedDonor', 'selectedYear', 'selectedYearType',
-            'years', 'yearlyData', 'companyHires'
+            'years', 'yearlyData', 'companyHires', 'companyTrainees'
         ));
     }
 
