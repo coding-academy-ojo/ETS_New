@@ -10,6 +10,7 @@
     }
     </style>
     <h1>Edit Trainee List</h1>
+
     <form action="{{ route('employment-status.update', $trainee->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
@@ -43,9 +44,9 @@
                 <div class="form-group">
                     <label for="inputGraduated" class="is-required">Graduated</label>
                     <select class="form-control" id="inputGraduated" name="graduated" required>
-                        <option value="Yes" {{ $trainee->graduated === 'yes' ? 'selected' : '' }}>yes</option>
-                        <option value="No" {{ $trainee->graduated === 'no' ? 'selected' : '' }}>no</option>
-                    </select>
+    <option value="Yes" {{ strtolower($trainee->graduated) == 'yes' ? 'selected' : '' }}>Yes</option>
+    <option value="No" {{ strtolower($trainee->graduated) == 'no' ? 'selected' : '' }}>No</option>
+</select>
                 </div>
 
                 <!-- <div class="form-group">

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <h1>Edit trainee List</h1>
+    
     <form action="{{ route('employment-status.update', $trainee->id) }}" method="POST">
       @csrf
       @method('PATCH')

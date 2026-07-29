@@ -292,6 +292,8 @@
                                 $logoPath = asset('assets/images/proparco.jpg');
                             } elseif ($fund == 'digiskills rfa2') {
                                 $logoPath = asset('assets/images/digiskills.png');
+                            }elseif ($fund == 'cpf') {
+                                $logoPath = asset('assets/images/digiskills.png');
                             }
                         @endphp
 

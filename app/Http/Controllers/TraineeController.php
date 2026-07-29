@@ -273,61 +273,197 @@ class TraineeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {  // Custom error messages
-        $messages = [
-            'personal_img.image' => 'The selected file must be an image.',
-            'personal_img.mimes' => 'Only JPEG, PNG, JPG, GIF formats are allowed for images.',
-            'personal_img.max' => 'The image size should not exceed 4000 KB.',
-            'trainee_cv.mimes' => 'Only PDF format is allowed for CV.',
-            'trainee_cv.max' => 'The CV size should not exceed 10240 KB.',
-        ];
-        //           dd($request->all());
-        // Validation with custom messages
-        $validatedData = $request->validate([
-            'personal_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4000',
-            'trainee_cv' => 'nullable|mimes:pdf|max:10240',
-        ], $messages);
+   public function update(Request $request, $id)
+{
+    $messages = [
+        'personal_img.image' => 'The selected file must be an image.',
+        'personal_img.mimes' => 'Only JPEG, PNG, JPG, GIF formats are allowed for images.',
+        'personal_img.max' => 'The image size should not exceed 4000 KB.',
+        'trainee_cv.mimes' => 'Only PDF format is allowed for CV.',
+        'trainee_cv.max' => 'The CV size should not exceed 10240 KB.',
+    ];
 
-        $trainee = Trainee::findOrFail($id);
+
+    $request->validate([
+
+        'first_name' => 'required|string',
+        'last_name' => 'required|string',
+        'mobile' => 'required',
+        'email' => 'required|email',
+
+        'graduated' => 'required|in:Yes,No',
+
+        'certificat_type' => 'required',
+        'nationality' => 'required',
+        'country' => 'required',
+
+        'national_id' => 'required',
+        'birthdate' => 'required',
+
+        'gender' => 'required',
+        'martial_status' => 'required',
+
+        'education' => 'required',
+        'educational_status' => 'required',
+        'field' => 'required',
+        'educational_background' => 'required',
+
+        'city' => 'required',
+        'address' => 'required',
+
+        'personal_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4000',
+
+        'trainee_cv' => 'nullable|mimes:pdf|max:10240',
+
+    ], $messages);
+
+
+
+    $trainee = Trainee::findOrFail($id);
+
+
+    $academy = $trainee->academy;
+    $cohort = $trainee->cohort;
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update Personal Image
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->hasFile('personal_img')) {
+
+
         $oldImage = $trainee->personal_img;
-        $oldCv = $trainee->trainee_cv;
-        $academy = $trainee->academy;
-        $cohort = $trainee->cohort;
 
-        // Image upload handling
-        if ($request->hasFile('personal_img')) {
-            $image = $request->file('personal_img');
-            $imageName = time() . '.' . $image->extension();
-            $image->move(public_path('images'), $imageName);
 
-            if ($oldImage && file_exists(public_path('images/' . $oldImage))) {
-                unlink(public_path('images/' . $oldImage));
-            }
+        $image = $request->file('personal_img');
 
-            $trainee->id_img = $imageName;
+
+        $imageName = time().'.'.$image->extension();
+
+
+        $image->move(public_path('images'), $imageName);
+
+
+
+        if ($oldImage && file_exists(public_path('images/'.$oldImage))) {
+
+            unlink(public_path('images/'.$oldImage));
+
         }
 
-        if ($request->hasFile('trainee_cv')) {
-            $cv = $request->file('trainee_cv');
-            $cvName = time() . '.' . $cv->extension();
-            $cv->move(public_path('cvs'), $cvName);
 
-            if ($oldCv && file_exists(public_path('cvs/' . $oldCv))) {
-                unlink(public_path('cvs/' . $oldCv));
-            }
+        $trainee->personal_img = $imageName;
 
-            $trainee->trainee_cv = $cvName;
-        }
-
-        // Save everything
-        $trainee->fill($request->except('personal_img', 'trainee_cv', 'employment_status'));
-        $trainee->save();
-
-        return redirect()
-            ->route('trainees.index', ['academy' => $academy, 'cohort' => $cohort])
-            ->with('success', 'Trainee updated successfully');
     }
+
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update CV
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->hasFile('trainee_cv')) {
+
+
+        $oldCv = $trainee->trainee_cv;
+
+
+        $cv = $request->file('trainee_cv');
+
+
+        $cvName = time().'.'.$cv->extension();
+
+
+        $cv->move(public_path('cvs'), $cvName);
+
+
+
+        if ($oldCv && file_exists(public_path('cvs/'.$oldCv))) {
+
+            unlink(public_path('cvs/'.$oldCv));
+
+        }
+
+
+        $trainee->trainee_cv = $cvName;
+
+    }
+
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update All Fields
+    |--------------------------------------------------------------------------
+    */
+
+    $trainee->first_name = $request->first_name;
+    $trainee->last_name = $request->last_name;
+
+    $trainee->mobile = $request->mobile;
+    $trainee->email = $request->email;
+
+    // Important: update graduated column
+    $trainee->graduated = $request->graduated;
+
+
+    $trainee->linkedin = $request->linkedin;
+    $trainee->git_hub = $request->git_hub;
+
+
+    $trainee->certificat_type = $request->certificat_type;
+
+    $trainee->nationality = $request->nationality;
+
+    $trainee->country = $request->country;
+
+
+    $trainee->national_id = $request->national_id;
+
+    $trainee->birthdate = $request->birthdate;
+
+
+    $trainee->gender = $request->gender;
+
+    $trainee->martial_status = $request->martial_status;
+
+
+    $trainee->education = $request->education;
+
+    $trainee->educational_status = $request->educational_status;
+
+    $trainee->field = $request->field;
+
+    $trainee->educational_background = $request->educational_background;
+
+
+    $trainee->city = $request->city;
+
+    $trainee->address = $request->address;
+
+
+
+    $trainee->save();
+
+
+
+    return redirect()
+        ->route('trainees.index', [
+            'academy' => $academy,
+            'cohort' => $cohort
+        ])
+        ->with('success','Trainee updated successfully');
+}
 
     /**
      * Remove the specified resource from storage.
